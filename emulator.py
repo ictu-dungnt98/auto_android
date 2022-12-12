@@ -25,6 +25,9 @@ class Emulator:
         with open(self.screen_img, "wb") as fp:
             fp.write(result)
 
+    def open_app(self, x, y):
+        self.device.input_tap(x, y)
+
     def find(self,template_pic_name=False,threshold=0.99):
         point = (0,0)
         if template_pic_name == False:
@@ -32,12 +35,7 @@ class Emulator:
         
         img = cv2.imread(self.screen_img)
         img2 = cv2.imread("facebook.PNG")
-        
-        _, w1, h1 = img.shape[::-1]
         _, w2, h2 = img2.shape[::-1]
-
-        print(w1, h1)
-        print(w2, h2)
 
         res = cv2.matchTemplate(img,img2,cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
@@ -51,4 +49,4 @@ class Emulator:
         # cv2.waitKey(0)
     
         point = (top_left[0] + w2/2, top_left[1] + h2/2)
-        self.device.input_tap(point[0], point[1])
+        return point

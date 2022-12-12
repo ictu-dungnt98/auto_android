@@ -18,6 +18,7 @@ class Auto:
             screen = e.capture_screen()
             point = e.find("facebook.PNG")
             print(point)
+            e.open_app(point[0], point[1])
 
 auto = Auto()
 # auto.list_devices()
