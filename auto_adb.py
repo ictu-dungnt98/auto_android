@@ -16,6 +16,8 @@ class Auto:
         for device in self.devices:
             e = emulator.Emulator(device)
             screen = e.capture_screen()
+            point = e.find("facebook.PNG")
+            print(point)
 
 auto = Auto()
 # auto.list_devices()
