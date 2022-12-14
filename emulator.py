@@ -1,4 +1,3 @@
-
 try: 
     from ppadb.client import Client as AdbClient
     import numpy as np

@@ -1,6 +1,8 @@
 from ppadb.client import Client as AdbClient
-import cv2
 import emulator
+
+import tkinter as tk
+
 
 class Auto:
     def __init__(self):
@@ -19,6 +21,10 @@ class Auto:
             point = e.find("facebook.PNG")
             print(point)
             e.open_app(point[0], point[1])
+
+
+root = tk.Tk()
+root.mainloop()
 
 auto = Auto()
 # auto.list_devices()
