@@ -12,11 +12,22 @@ except:
 from ppadb.client import Client as AdbClient
 import numpy as np
 import cv2
+import subprocess
 
-class Emulator:
+class Phone:
     def __init__(self, device):
         self.device = device
-        self.screen_img = ""
+        self.screen_img = ""    
+    
+    def open_app(self, package_name, activity_name):
+        # Command to open the app
+        command = f"am start -n {package_name}/{activity_name}"
+        self.device.shell(command)
+
+    def close_app(self,package_name):
+        adb_cmd = f"adb shell am force-stop {package_name}"
+        subprocess.run(adb_cmd, shell=True)
+
     
     def capture_screen(self):
         print("capture_screens " + self.device.serial)
@@ -24,14 +35,9 @@ class Emulator:
         img = cv2.imdecode(np.frombuffer(image, np.uint8), cv2.IMREAD_COLOR)
         
         self.screen_img = "{}.png".format(self.device.serial)
-        cv2.imwrite(self.screen_img, img)
-        # with open(self.screen_img, "wb") as fp:
-        #     fp.write(result)
-        #     print("save screen image")
-
-    def open_app(self, x, y):
-        print("open_app {} {}".format(x, y))
-        self.device.input_tap(x, y)
+        with open(self.screen_img, "wb") as fp:
+            fp.write(result)
+            print("save screen image")
 
     def find(self,template_img_file="img.png",threshold=0.99):
         print("find image " + template_img_file)
@@ -56,3 +62,28 @@ class Emulator:
     
         point = (top_left[0] + w2/2, top_left[1] + h2/2)
         return point
+
+    def get_screen_dimensions(self):
+        # Run adb command to get the screen dimensions
+        adb_cmd = "adb shell wm size"
+        result = subprocess.run(adb_cmd, shell=True, capture_output=True, text=True)
+        output = result.stdout.strip()
+        # Extract screen width and height from the output
+        width, height = map(int, output.split()[-1].split('x'))
+        return width, height
+
+    def click_center_of_screen(self):
+        # Get screen dimensions
+        width, height = self.get_screen_dimensions()
+        # Calculate center coordinates
+        center_x = width // 2
+        center_y = height // 2
+        # Run adb command to send a tap event at the center of the screen
+        adb_cmd = f"adb shell input tap {center_x} {center_y}"
+        print(adb_cmd)
+        subprocess.run(adb_cmd, shell=True)
+
+    def click_to_position(self, x, y):
+        command = f"input tap {x} {y}"
+        self.device.shell(command)
+
