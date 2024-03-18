@@ -1,0 +1,6 @@
+# How to get package_name and active_name
+1. open cmd and run following command
+2. adb shell
+3. open the app on android phone
+4. run folowing command in adb shell:
+    dumpsys window displays | grep -E ‘mCurrentFocus’
