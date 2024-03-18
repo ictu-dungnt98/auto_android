@@ -29,19 +29,46 @@ class Phone:
         subprocess.run(adb_cmd, shell=True)
 
     
-    def capture_screen(self):
-        print("capture_screens " + self.device.serial)
-        result = self.device.screencap()
-        img = cv2.imdecode(np.frombuffer(image, np.uint8), cv2.IMREAD_COLOR)
+    # def capture_screen(self):
+    #     print("capture_screens " + self.device.serial)
+    #     result = self.device.screencap()
+    #     img = cv2.imdecode(np.frombuffer(image, np.uint8), cv2.IMREAD_COLOR)
         
-        self.screen_img = "{}.png".format(self.device.serial)
-        with open(self.screen_img, "wb") as fp:
-            fp.write(result)
-            print("save screen image")
+    #     self.screen_img = "{}.png".format(self.device.serial)
+    #     with open(self.screen_img, "wb") as fp:
+    #         fp.write(result)
+    #         print("save screen image")
+
+    def capture_screen(self):
+        # Run adb command to capture a screenshot
+        adb_cmd = "adb exec-out screencap -p"
+        adb_process = subprocess.Popen(adb_cmd, shell=True, stdout=subprocess.PIPE)
+        screenshot_bytes = adb_process.stdout.read()
+        # Convert the screenshot bytes to a numpy array
+        screenshot_np = np.frombuffer(screenshot_bytes, dtype=np.uint8)
+        # Decode the numpy array as an OpenCV image
+        screenshot = cv2.imdecode(screenshot_np, cv2.IMREAD_COLOR)
+        return screenshot
+
+    
+    def find_image(self,template_path, screenshot):
+        # Load the target image
+        template = cv2.imread(template_path, cv2.IMREAD_COLOR)
+
+        # Search for the target image within the screenshot
+        result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+
+        # Threshold for match confidence
+        threshold = 0.8
+        if max_val >= threshold:
+            return max_loc
+        else:
+            return None
 
     def find(self,template_img_file="img.png",threshold=0.99):
         print("find image " + template_img_file)
-        point = (0,0)
+        
         img = cv2.imread(self.screen_img)
         img2 = cv2.imread(template_img_file)
         _, w2, h2 = img2.shape[::-1]
@@ -49,10 +76,9 @@ class Phone:
         res = cv2.matchTemplate(img,img2,cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
+        # draw rectangle
         top_left = max_loc
         bottom_right = (top_left[0] + w2, top_left[1] + h2)
-
-        # draw rectangle
         print(top_left)
         print(bottom_right)
         cv2.rectangle(img,top_left, bottom_right, (0, 255, 255), 0)
@@ -60,6 +86,7 @@ class Phone:
         cv2.imshow('img2', img2)
         cv2.waitKey(0)
     
+        point = (0,0)
         point = (top_left[0] + w2/2, top_left[1] + h2/2)
         return point
 
