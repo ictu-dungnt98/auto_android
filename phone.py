@@ -52,47 +52,83 @@ class Phone:
         return screenshot
 
     
+    # def find_image(self, template_path, screenshot):
+    #     # Load the target image
+    #     template = cv2.imread(template_path, cv2.IMREAD_COLOR)
+
+    #     # Resize the template image to match the size of the screenshot
+    #     template = cv2.resize(template, (screenshot.shape[1], screenshot.shape[0]))
+
+    #     # Search for the target image within the screenshot
+    #     result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
+    #     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+
+    #     # Threshold for match confidence
+    #     threshold = 0.8
+    #     if max_val >= threshold:
+    #         return max_loc
+    #     else:
+    #         return None
+    
     def find_image(self, template_path, screenshot):
-        # Load the target image
+        # Load the template image
         template = cv2.imread(template_path, cv2.IMREAD_COLOR)
 
-        # Resize the template image to match the size of the screenshot
-        template = cv2.resize(template, (screenshot.shape[1], screenshot.shape[0]))
+        # Convert images to the correct data type if necessary
+        screenshot = cv2.convertScaleAbs(screenshot)
+        template = cv2.convertScaleAbs(template)
 
-        # Search for the target image within the screenshot
+        # Perform template matching
         result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
 
         # Threshold for match confidence
         threshold = 0.8
+
+        # If a match is found with sufficient confidence
         if max_val >= threshold:
-            return max_loc
+            # Extract the coordinates of the match
+            match_location = max_loc
+            return match_location
         else:
             return None
 
-    def find(self,template_img_file="img.png",threshold=0.99):
-        print("find image " + template_img_file)
+
+    def find_center_of_img(self,template_path,screenshot):
+        # Load the template image
+        template = cv2.imread(template_path, cv2.IMREAD_COLOR)
+
+        # Convert images to the correct data type if necessary
+        screenshot = cv2.convertScaleAbs(screenshot)
+        template = cv2.convertScaleAbs(template)
+
+        # Perform template matching
+        result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
         
-        img = cv2.imread(self.screen_img)
-        img2 = cv2.imread(template_img_file)
-        _, w2, h2 = img2.shape[::-1]
-
-        res = cv2.matchTemplate(img,img2,cv2.TM_CCOEFF_NORMED)
-        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-
-        # draw rectangle
-        top_left = max_loc
-        bottom_right = (top_left[0] + w2, top_left[1] + h2)
-        print(top_left)
-        print(bottom_right)
-        cv2.rectangle(img,top_left, bottom_right, (0, 255, 255), 0)
-        cv2.imshow('img', img)
-        cv2.imshow('img2', img2)
-        cv2.waitKey(0)
-    
-        point = (0,0)
-        point = (top_left[0] + w2/2, top_left[1] + h2/2)
-        return point
+        # Threshold for match confidence
+        threshold = 0.8
+        if max_val >= threshold:
+            # Calculate the center coordinates
+            top_left = max_loc
+            template_width, template_height = template.shape[1], template.shape[0]
+            center_x = top_left[0] + template_width // 2
+            center_y = top_left[1] + template_height // 2
+            return center_x, center_y
+        return 0, 0
+        
+        # # draw rectangle
+        # top_left = max_loc
+        # bottom_right = (top_left[0] + w2, top_left[1] + h2)
+        # print(top_left)
+        # print(bottom_right)
+        # cv2.rectangle(img,top_left, bottom_right, (0, 255, 255), 0)
+        # cv2.imshow('img', img)
+        # cv2.imshow('template', template)
+        # cv2.waitKey(0)
+        # point = (0,0)
+        # point = (top_left[0] + w2/2, top_left[1] + h2/2)
+        # return point
 
     def get_screen_dimensions(self):
         # Run adb command to get the screen dimensions
@@ -137,25 +173,23 @@ class Phone:
     
     def click_to_person(self):
         screenshot = self.capture_screen()
-        match_location = self.find_image("home.png", screenshot)
         
-        if match_location:
-            print("home.png image found at location:", match_location)
-            # Get screen dimensions
-            width, height = self.get_screen_dimensions()
-            # Calculate center coordinates
-            center_x = width / 4
-            center_y = height / 4
-            # Run adb command to send a tap event at the center of the screen
+        # Load input image (screenshot) and template image
+        template = cv2.imread("template.png", cv2.IMREAD_COLOR)
+        # Convert images to the correct data type if necessary
+        screenshot = cv2.convertScaleAbs(screenshot)
+        template = cv2.convertScaleAbs(template)
+
+        center_x, center_y = self.find_center_of_img("template.png", screenshot)
+    
+        if center_x != 0 and center_y != 0:
             adb_cmd = f"adb shell input tap {center_x} {center_y}"
             print(adb_cmd)
             subprocess.run(adb_cmd, shell=True)
-            
             return True
         else:
-            print("home.png image not found on the screen. Retrying in 1 second...")
+            print("nhan_vat.png image not found on the screen. Retrying in 1 second...")
             time.sleep(1)  # Wait for 1 second before retrying
-            
             return False
 
 

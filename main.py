@@ -56,3 +56,35 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# import cv2
+# import numpy as np
+
+# def select_roi(image):
+#     # Display the image and allow the user to select a region of interest (ROI)
+#     clone = image.copy()
+#     roi = cv2.selectROI("Select ROI", clone)
+#     cv2.destroyAllWindows()
+
+#     # Crop the image to the selected ROI
+#     x, y, w, h = roi
+#     roi_image = image[y:y+h, x:x+w]
+
+#     return roi_image
+
+# def save_template(template_image, filename):
+#     # Save the template image to a file
+#     cv2.imwrite(filename, template_image)
+
+# if __name__ == "__main__":
+#     # Load the screen capture image
+#     screenshot = cv2.imread("home.png")
+
+#     # Select a region of interest (ROI) from the screen capture
+#     template = select_roi(screenshot)
+
+#     # Save the selected region as the template image
+#     save_template(template, "template.png")
+
+#     print("Template image saved as 'template.png'")
