@@ -96,7 +96,7 @@ class Phone:
 
 
     def find_center_of_img(self,template_path,screenshot):
-        # Load the template image
+        # # Load the template image
         template = cv2.imread(template_path, cv2.IMREAD_COLOR)
 
         # Convert images to the correct data type if necessary
@@ -117,44 +117,20 @@ class Phone:
             center_y = top_left[1] + template_height // 2
             return center_x, center_y
         return 0, 0
-        
-        # # draw rectangle
-        # top_left = max_loc
-        # bottom_right = (top_left[0] + w2, top_left[1] + h2)
-        # print(top_left)
-        # print(bottom_right)
-        # cv2.rectangle(img,top_left, bottom_right, (0, 255, 255), 0)
-        # cv2.imshow('img', img)
-        # cv2.imshow('template', template)
-        # cv2.waitKey(0)
-        # point = (0,0)
-        # point = (top_left[0] + w2/2, top_left[1] + h2/2)
-        # return point
 
-    def get_screen_dimensions(self):
-        # Run adb command to get the screen dimensions
-        adb_cmd = "adb shell wm size"
-        result = subprocess.run(adb_cmd, shell=True, capture_output=True, text=True)
-        output = result.stdout.strip()
-        # Extract screen width and height from the output
-        width, height = map(int, output.split()[-1].split('x'))
-        return width, height
-
-    def click_login_screen(self):
+    def click_de_vao_game(self):
         screenshot = self.capture_screen()
-        match_location = self.find_image("login.png", screenshot)
+        template = cv2.imread("login.png", cv2.IMREAD_COLOR)
+        template_width, template_height = template.shape[1], template.shape[0]
         
+        match_location = self.find_image("login.png", screenshot)
         if match_location:
             print("login.png image found at location:", match_location)
             # Get screen dimensions
-            width, height = self.get_screen_dimensions()
             # Calculate center coordinates
-            center_x = width / 4
-            center_y = height / 4
-            # Run adb command to send a tap event at the center of the screen
-            adb_cmd = f"adb shell input tap {center_x} {center_y}"
-            print(adb_cmd)
-            subprocess.run(adb_cmd, shell=True)
+            center_x = template_width / 4
+            center_y = template_height / 4
+            self.click_to_position(center_x, center_y)
             
             return True
         else:
@@ -181,15 +157,33 @@ class Phone:
         screenshot = cv2.convertScaleAbs(screenshot)
         template = cv2.convertScaleAbs(template)
 
-        center_x, center_y = self.find_center_of_img("template.png", screenshot)
+        center_x, center_y = self.find_center_of_img("nhan_vat.png", screenshot)
     
         if center_x != 0 and center_y != 0:
-            adb_cmd = f"adb shell input tap {center_x} {center_y}"
-            print(adb_cmd)
-            subprocess.run(adb_cmd, shell=True)
+            self.click_to_position(center_x, center_y)
+            print("click_to_person success")
             return True
         else:
-            print("image not found on the screen. Retrying in 1 second...")
+            time.sleep(1)  # Wait for 1 second before retrying
+            return False
+        
+        
+    def click_to_quang_cao(self):
+        screenshot = self.capture_screen()
+        
+        # Load input image (screenshot) and template image
+        template = cv2.imread("quang_cao.png", cv2.IMREAD_COLOR)
+        # Convert images to the correct data type if necessary
+        screenshot = cv2.convertScaleAbs(screenshot)
+        template = cv2.convertScaleAbs(template)
+        
+        center_x, center_y = self.find_center_of_img("quang_cao.png", screenshot)
+    
+        if center_x != 0 and center_y != 0:
+            self.click_to_position(center_x, center_y)
+            print("click_to_quang_cao success")
+            return True
+        else:
             time.sleep(1)  # Wait for 1 second before retrying
             return False
 

@@ -9,7 +9,7 @@ LOGIN = 1
 CLICK_MAN_HINH_CHINH = LOGIN + 1
 CLICK_NHAN_VAT = CLICK_MAN_HINH_CHINH + 1
 CLICK_QUANG_CAO = CLICK_NHAN_VAT + 1
-
+NEXT = CLICK_QUANG_CAO + 1
 def connect():
     # start adb-server
     cmd = f"adb start-server"
@@ -44,7 +44,7 @@ def main():
             phone.open_app(package_name, activity_name)
             step = CLICK_MAN_HINH_CHINH
         elif step == CLICK_MAN_HINH_CHINH:
-            phone.click_login_screen()
+            phone.click_de_vao_game()
             if (phone.wait_main_screen()):
                 step = CLICK_NHAN_VAT
         elif step == CLICK_NHAN_VAT:
@@ -52,39 +52,11 @@ def main():
                 print("click person success")
                 step = CLICK_QUANG_CAO
         elif step == CLICK_QUANG_CAO:
+            if(phone.click_to_quang_cao()):
+                step = NEXT
+                print("click_to_quang_cao success")
+        elif step == NEXT:
             pass
 
 if __name__ == "__main__":
     main()
-
-
-# import cv2
-# import numpy as np
-
-# def select_roi(image):
-#     # Display the image and allow the user to select a region of interest (ROI)
-#     clone = image.copy()
-#     roi = cv2.selectROI("Select ROI", clone)
-#     cv2.destroyAllWindows()
-
-#     # Crop the image to the selected ROI
-#     x, y, w, h = roi
-#     roi_image = image[y:y+h, x:x+w]
-
-#     return roi_image
-
-# def save_template(template_image, filename):
-#     # Save the template image to a file
-#     cv2.imwrite(filename, template_image)
-
-# if __name__ == "__main__":
-#     # Load the screen capture image
-#     screenshot = cv2.imread("home.png")
-
-#     # Select a region of interest (ROI) from the screen capture
-#     template = select_roi(screenshot)
-
-#     # Save the selected region as the template image
-#     save_template(template, "template.png")
-
-#     print("Template image saved as 'template.png'")
