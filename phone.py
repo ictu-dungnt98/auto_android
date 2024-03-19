@@ -44,7 +44,8 @@ class Phone:
         # Run adb command to capture a screenshot
         adb_cmd = "adb exec-out screencap -p"
         adb_process = subprocess.Popen(adb_cmd, shell=True, stdout=subprocess.PIPE)
-        screenshot_bytes = adb_process.stdout.read()
+        # screenshot_bytes = adb_process.stdout.read()
+        screenshot_bytes, _ = adb_process.communicate()
         # Convert the screenshot bytes to a numpy array
         screenshot_np = np.frombuffer(screenshot_bytes, dtype=np.uint8)
         # Decode the numpy array as an OpenCV image
@@ -175,7 +176,7 @@ class Phone:
         screenshot = self.capture_screen()
         
         # Load input image (screenshot) and template image
-        template = cv2.imread("template.png", cv2.IMREAD_COLOR)
+        template = cv2.imread("nhan_vat.png", cv2.IMREAD_COLOR)
         # Convert images to the correct data type if necessary
         screenshot = cv2.convertScaleAbs(screenshot)
         template = cv2.convertScaleAbs(template)
@@ -188,7 +189,7 @@ class Phone:
             subprocess.run(adb_cmd, shell=True)
             return True
         else:
-            print("nhan_vat.png image not found on the screen. Retrying in 1 second...")
+            print("image not found on the screen. Retrying in 1 second...")
             time.sleep(1)  # Wait for 1 second before retrying
             return False
 
