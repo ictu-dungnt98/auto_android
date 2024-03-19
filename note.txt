@@ -4,3 +4,7 @@
 3. open the app on android phone
 4. run folowing command in adb shell:
     dumpsys window displays | grep -E ‘mCurrentFocus’
+
+
+# capture template screen
+adb exec-out screencap -p > screenshot.png

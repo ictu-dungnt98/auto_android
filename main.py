@@ -6,7 +6,8 @@ from phone import Phone
 
 # list cac buoc
 LOGIN = 1
-CLICK_NHAN_VAT = LOGIN + 1
+CLICK_MAN_HINH_CHINH = LOGIN + 1
+CLICK_NHAN_VAT = CLICK_MAN_HINH_CHINH + 1
 CLICK_QUANG_CAO = CLICK_NHAN_VAT + 1
 
 def connect():
@@ -41,9 +42,15 @@ def main():
     while True:
         if step == LOGIN:
             phone.open_app(package_name, activity_name)
-            step = CLICK_NHAN_VAT
+            step = CLICK_MAN_HINH_CHINH
+        elif step == CLICK_MAN_HINH_CHINH:
+            phone.click_login_screen()
+            if (phone.wait_main_screen()):
+                step = CLICK_NHAN_VAT
         elif step == CLICK_NHAN_VAT:
-            phone.click_center_of_screen()
+            if (phone.click_to_person()):
+                print("click person success")
+                step = CLICK_QUANG_CAO
         elif step == CLICK_QUANG_CAO:
             pass
 

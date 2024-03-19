@@ -52,9 +52,12 @@ class Phone:
         return screenshot
 
     
-    def find_image(self,template_path, screenshot):
+    def find_image(self, template_path, screenshot):
         # Load the target image
         template = cv2.imread(template_path, cv2.IMREAD_COLOR)
+
+        # Resize the template image to match the size of the screenshot
+        template = cv2.resize(template, (screenshot.shape[1], screenshot.shape[0]))
 
         # Search for the target image within the screenshot
         result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
@@ -100,25 +103,61 @@ class Phone:
         width, height = map(int, output.split()[-1].split('x'))
         return width, height
 
-    def click_center_of_screen(self):
+    def click_login_screen(self):
         screenshot = self.capture_screen()
         match_location = self.find_image("login.png", screenshot)
         
         if match_location:
-            print("Target image found at location:", match_location)
+            print("login.png image found at location:", match_location)
+            # Get screen dimensions
+            width, height = self.get_screen_dimensions()
+            # Calculate center coordinates
+            center_x = width / 4
+            center_y = height / 4
+            # Run adb command to send a tap event at the center of the screen
+            adb_cmd = f"adb shell input tap {center_x} {center_y}"
+            print(adb_cmd)
+            subprocess.run(adb_cmd, shell=True)
+            
+            return True
         else:
-            print("Target image not found on the screen. Retrying in 1 second...")
+            print("login.png image not found on the screen. Retrying in 1 second...")
             time.sleep(1)  # Wait for 1 second before retrying
+            
+            return False
+    
+    def wait_main_screen(self):
+        screenshot = self.capture_screen()
+        match_location = self.find_image("home.png", screenshot)
+        
+        if match_location:
+            return True
+        else:
+            return False
+    
+    def click_to_person(self):
+        screenshot = self.capture_screen()
+        match_location = self.find_image("home.png", screenshot)
+        
+        if match_location:
+            print("home.png image found at location:", match_location)
+            # Get screen dimensions
+            width, height = self.get_screen_dimensions()
+            # Calculate center coordinates
+            center_x = width / 4
+            center_y = height / 4
+            # Run adb command to send a tap event at the center of the screen
+            adb_cmd = f"adb shell input tap {center_x} {center_y}"
+            print(adb_cmd)
+            subprocess.run(adb_cmd, shell=True)
+            
+            return True
+        else:
+            print("home.png image not found on the screen. Retrying in 1 second...")
+            time.sleep(1)  # Wait for 1 second before retrying
+            
+            return False
 
-        # # Get screen dimensions
-        # width, height = self.get_screen_dimensions()
-        # # Calculate center coordinates
-        # center_x = width // 2
-        # center_y = height // 2
-        # # Run adb command to send a tap event at the center of the screen
-        # adb_cmd = f"adb shell input tap {center_x} {center_y}"
-        # print(adb_cmd)
-        # subprocess.run(adb_cmd, shell=True)
 
     def click_to_position(self, x, y):
         command = f"input tap {x} {y}"
