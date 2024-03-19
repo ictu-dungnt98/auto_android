@@ -9,7 +9,8 @@ LOGIN = 1
 CLICK_MAN_HINH_CHINH = LOGIN + 1
 CLICK_NHAN_VAT = CLICK_MAN_HINH_CHINH + 1
 CLICK_QUANG_CAO = CLICK_NHAN_VAT + 1
-NEXT = CLICK_QUANG_CAO + 1
+CLICK_QUA_TANG_QC = CLICK_QUANG_CAO + 1
+NEXT = CLICK_QUA_TANG_QC + 1
 def connect():
     # start adb-server
     cmd = f"adb start-server"
@@ -48,13 +49,14 @@ def main():
             if (phone.wait_main_screen()):
                 step = CLICK_NHAN_VAT
         elif step == CLICK_NHAN_VAT:
-            if (phone.click_to_person()):
-                print("click person success")
+            if (phone.click_to_img("nhan_vat.png")):
                 step = CLICK_QUANG_CAO
         elif step == CLICK_QUANG_CAO:
-            if(phone.click_to_quang_cao()):
+            if(phone.click_to_img("quang_cao.png")):
+                step = CLICK_QUA_TANG_QC
+        elif step == CLICK_QUA_TANG_QC:
+            if(phone.click_to_img("qua_tang_qc.png")):
                 step = NEXT
-                print("click_to_quang_cao success")
         elif step == NEXT:
             pass
 

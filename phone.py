@@ -148,42 +148,23 @@ class Phone:
         else:
             return False
     
-    def click_to_person(self):
+    def click_to_img(self, img_path):
         screenshot = self.capture_screen()
         
         # Load input image (screenshot) and template image
-        template = cv2.imread("nhan_vat.png", cv2.IMREAD_COLOR)
+        template = cv2.imread(img_path, cv2.IMREAD_COLOR)
         # Convert images to the correct data type if necessary
         screenshot = cv2.convertScaleAbs(screenshot)
         template = cv2.convertScaleAbs(template)
 
-        center_x, center_y = self.find_center_of_img("nhan_vat.png", screenshot)
+        center_x, center_y = self.find_center_of_img(img_path, screenshot)
     
         if center_x != 0 and center_y != 0:
             self.click_to_position(center_x, center_y)
-            print("click_to_person success")
+            print("click to {} success".format(img_path))
             return True
         else:
-            time.sleep(1)  # Wait for 1 second before retrying
-            return False
-        
-        
-    def click_to_quang_cao(self):
-        screenshot = self.capture_screen()
-        
-        # Load input image (screenshot) and template image
-        template = cv2.imread("quang_cao.png", cv2.IMREAD_COLOR)
-        # Convert images to the correct data type if necessary
-        screenshot = cv2.convertScaleAbs(screenshot)
-        template = cv2.convertScaleAbs(template)
-        
-        center_x, center_y = self.find_center_of_img("quang_cao.png", screenshot)
-    
-        if center_x != 0 and center_y != 0:
-            self.click_to_position(center_x, center_y)
-            print("click_to_quang_cao success")
-            return True
-        else:
+            print("click to {} fail".format(img_path))
             time.sleep(1)  # Wait for 1 second before retrying
             return False
 
