@@ -13,6 +13,7 @@ from ppadb.client import Client as AdbClient
 import numpy as np
 import cv2
 import subprocess
+import time
 
 class Phone:
     def __init__(self, device):
@@ -100,15 +101,24 @@ class Phone:
         return width, height
 
     def click_center_of_screen(self):
-        # Get screen dimensions
-        width, height = self.get_screen_dimensions()
-        # Calculate center coordinates
-        center_x = width // 2
-        center_y = height // 2
-        # Run adb command to send a tap event at the center of the screen
-        adb_cmd = f"adb shell input tap {center_x} {center_y}"
-        print(adb_cmd)
-        subprocess.run(adb_cmd, shell=True)
+        screenshot = self.capture_screen()
+        match_location = self.find_image("login.png", screenshot)
+        
+        if match_location:
+            print("Target image found at location:", match_location)
+        else:
+            print("Target image not found on the screen. Retrying in 1 second...")
+            time.sleep(1)  # Wait for 1 second before retrying
+
+        # # Get screen dimensions
+        # width, height = self.get_screen_dimensions()
+        # # Calculate center coordinates
+        # center_x = width // 2
+        # center_y = height // 2
+        # # Run adb command to send a tap event at the center of the screen
+        # adb_cmd = f"adb shell input tap {center_x} {center_y}"
+        # print(adb_cmd)
+        # subprocess.run(adb_cmd, shell=True)
 
     def click_to_position(self, x, y):
         command = f"input tap {x} {y}"

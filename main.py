@@ -10,6 +10,10 @@ CLICK_NHAN_VAT = LOGIN + 1
 CLICK_QUANG_CAO = CLICK_NHAN_VAT + 1
 
 def connect():
+    # start adb-server
+    cmd = f"adb start-server"
+    subprocess.run(cmd, shell=True)
+    
     # Connect to ADB server
     client = AdbClient(host="127.0.0.1", port=5037)
     # Get list of devices
