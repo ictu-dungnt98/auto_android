@@ -18,7 +18,7 @@ import time
 class Phone:
     def __init__(self, device):
         self.device = device
-        self.screen_img = ""    
+        self.screen_img = ""
     
     def open_app(self, package_name, activity_name):
         # Command to open the app
@@ -29,48 +29,17 @@ class Phone:
         adb_cmd = f"adb shell am force-stop {package_name}"
         subprocess.run(adb_cmd, shell=True)
 
-    
-    # def capture_screen(self):
-    #     print("capture_screens " + self.device.serial)
-    #     result = self.device.screencap()
-    #     img = cv2.imdecode(np.frombuffer(image, np.uint8), cv2.IMREAD_COLOR)
-        
-    #     self.screen_img = "{}.png".format(self.device.serial)
-    #     with open(self.screen_img, "wb") as fp:
-    #         fp.write(result)
-    #         print("save screen image")
-
     def capture_screen(self):
         # Run adb command to capture a screenshot
         adb_cmd = "adb exec-out screencap -p"
         adb_process = subprocess.Popen(adb_cmd, shell=True, stdout=subprocess.PIPE)
-        # screenshot_bytes = adb_process.stdout.read()
         screenshot_bytes, _ = adb_process.communicate()
         # Convert the screenshot bytes to a numpy array
         screenshot_np = np.frombuffer(screenshot_bytes, dtype=np.uint8)
         # Decode the numpy array as an OpenCV image
         screenshot = cv2.imdecode(screenshot_np, cv2.IMREAD_COLOR)
         return screenshot
-
-    
-    # def find_image(self, template_path, screenshot):
-    #     # Load the target image
-    #     template = cv2.imread(template_path, cv2.IMREAD_COLOR)
-
-    #     # Resize the template image to match the size of the screenshot
-    #     template = cv2.resize(template, (screenshot.shape[1], screenshot.shape[0]))
-
-    #     # Search for the target image within the screenshot
-    #     result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
-    #     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-
-    #     # Threshold for match confidence
-    #     threshold = 0.8
-    #     if max_val >= threshold:
-    #         return max_loc
-    #     else:
-    #         return None
-    
+  
     def find_image(self, template_path, screenshot):
         # Load the template image
         template = cv2.imread(template_path, cv2.IMREAD_COLOR)
@@ -118,8 +87,14 @@ class Phone:
             return center_x, center_y
         return 0, 0
 
-    def click_de_vao_game(self):
-        screenshot = self.capture_screen()
+    def wait_img(self, img_path, screenshot):
+        match_location = self.find_image(img_path, screenshot)
+        if match_location:
+            return True
+        else:
+            return False
+    
+    def click_de_vao_game(self, screenshot):
         template = cv2.imread("login.png", cv2.IMREAD_COLOR)
         template_width, template_height = template.shape[1], template.shape[0]
         
@@ -139,17 +114,7 @@ class Phone:
             
             return False
     
-    def wait_main_screen(self):
-        screenshot = self.capture_screen()
-        match_location = self.find_image("home.png", screenshot)
-        
-        if match_location:
-            return True
-        else:
-            return False
-    
-    def click_to_img(self, img_path):
-        screenshot = self.capture_screen()
+    def click_to_img(self, img_path, screenshot):
         
         # Load input image (screenshot) and template image
         template = cv2.imread(img_path, cv2.IMREAD_COLOR)

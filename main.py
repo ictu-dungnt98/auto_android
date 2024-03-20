@@ -6,11 +6,11 @@ from phone import Phone
 
 # list cac buoc
 LOGIN = 1
-CLICK_MAN_HINH_CHINH = LOGIN + 1
-CLICK_NHAN_VAT = CLICK_MAN_HINH_CHINH + 1
-CLICK_QUANG_CAO = CLICK_NHAN_VAT + 1
-CLICK_QUA_TANG_QC = CLICK_QUANG_CAO + 1
-NEXT = CLICK_QUA_TANG_QC + 1
+XEM_QC = LOGIN + 1
+LOG_OUT = XEM_QC + 1
+DOI_UID = LOG_OUT + 1
+CHON_UID = DOI_UID + 1
+NEXT = CHON_UID + 1
 def connect():
     # start adb-server
     cmd = f"adb start-server"
@@ -39,26 +39,59 @@ def main():
     # close app
     phone.close_app(package_name)
     time.sleep(1)
-
+    phone.open_app(package_name, activity_name)
+    time.sleep(2)
+    
     while True:
-        if step == LOGIN:
-            phone.open_app(package_name, activity_name)
-            step = CLICK_MAN_HINH_CHINH
-        elif step == CLICK_MAN_HINH_CHINH:
-            phone.click_de_vao_game()
-            if (phone.wait_main_screen()):
-                step = CLICK_NHAN_VAT
-        elif step == CLICK_NHAN_VAT:
-            if (phone.click_to_img("nhan_vat.png")):
-                step = CLICK_QUANG_CAO
-        elif step == CLICK_QUANG_CAO:
-            if(phone.click_to_img("quang_cao.png")):
-                step = CLICK_QUA_TANG_QC
-        elif step == CLICK_QUA_TANG_QC:
-            if(phone.click_to_img("qua_tang_qc.png")):
-                step = NEXT
-        elif step == NEXT:
-            pass
+        screenshot = phone.capture_screen()
 
+        if step == LOGIN:
+            if (phone.wait_img("login.png", screenshot)):
+                phone.click_de_vao_game(screenshot)
+            if (phone.wait_img("home.png", screenshot)):
+                phone.click_to_img("nhan_vat.png", screenshot)
+            if (phone.wait_img("quang_cao.png", screenshot)):
+                phone.click_to_img("quang_cao.png", screenshot)
+            if (phone.wait_img("qua_tang_qc.png", screenshot)):
+                phone.click_to_img("qua_tang_qc.png", screenshot)
+            if(phone.wait_img("xem_available.png", screenshot)):
+                step = XEM_QC
+
+        if step == XEM_QC:
+            if(phone.wait_img("xem_not_available.png", screenshot)):
+                step = LOG_OUT
+            if(phone.wait_img("xem_available.png", screenshot)):
+                phone.click_to_img("xem_available.png", screenshot)
+            if(phone.wait_img("close_quang_cao.png", screenshot)):
+                phone.click_to_img("close_quang_cao.png", screenshot)
+            if(phone.wait_img("x_quang_cao.png", screenshot)):
+                phone.click_to_img("x_quang_cao.png", screenshot)
+            if(phone.wait_img("x_quang_cao_2.png", screenshot)):
+                phone.click_to_img("x_quang_cao_2.png", screenshot)
+            if(phone.wait_img("OK_nhan_qua.png", screenshot)):
+                phone.click_to_img("OK_nhan_qua.png", screenshot)
+        
+        elif step == LOG_OUT:
+            if (phone.wait_img("tai_khoan.png", screenshot)):
+                step = DOI_UID
+                 
+            if (phone.wait_img("close_xem_not_available.png", screenshot)):
+                phone.click_to_img("close_xem_not_available.png", screenshot)
+            if (phone.wait_img("setting_btn.png", screenshot)):
+                phone.click_to_img("setting_btn.png", screenshot)
+        
+        elif step == DOI_UID:
+            if (phone.wait_img("tai_khoan.png", screenshot)):
+                phone.click_to_img("tai_khoan.png", screenshot)   
+            if (phone.wait_img("doi_uuid.png", screenshot)):
+                phone.click_to_img("doi_uuid.png", screenshot)
+            if (phone.wait_img("ok_doi_uid.png", screenshot)):
+                phone.click_to_img("ok_doi_uid.png", screenshot)
+            if (phone.wait_img("login.png", screenshot)):
+                step = CHON_UID
+        elif step == CHON_UID:
+            if (phone.wait_img("show_list_uid.png", screenshot)):
+                phone.click_to_img("show_list_uid.png", screenshot)   
+        
 if __name__ == "__main__":
     main()
