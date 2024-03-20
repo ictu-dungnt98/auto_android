@@ -153,6 +153,7 @@ def main():
                 if (phone.wait_img("ok_text_input.png", screenshot)):
                     phone.click_to_img("ok_text_input.png", screenshot)
                     step = CLICK_DANG_NHAP
+                    in_used += 1
 
         elif step == CLICK_DANG_NHAP:
             if (phone.wait_img("btn_dang_nhap.png", screenshot)):
@@ -160,5 +161,6 @@ def main():
             if (phone.wait_img("tiep_tuc_dang_nhap.png", screenshot)):
                 phone.click_to_img("tiep_tuc_dang_nhap.png", screenshot)
                 step = LOGIN
+
 if __name__ == "__main__":
     main()
