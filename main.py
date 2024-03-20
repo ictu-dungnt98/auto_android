@@ -75,7 +75,7 @@ def main():
             if (phone.wait_img("close_tich_luy_dang_nhap.png", screenshot)):
                 phone.click_to_img("close_tich_luy_dang_nhap.png", screenshot)
             if (phone.wait_img("home.png", screenshot)):
-                phone.click_to_img("nhan_vat.png", screenshot)
+                phone.click_left_of_img("plus_jump_to_qc.png", screenshot)
             if (phone.wait_img("quang_cao.png", screenshot)):
                 phone.click_to_img("quang_cao.png", screenshot)
             if (phone.wait_img("qua_tang_qc.png", screenshot)):
@@ -98,13 +98,11 @@ def main():
                 phone.click_to_img("OK_nhan_qua.png", screenshot)
         
         elif step == LOG_OUT:
-            if (phone.wait_img("tai_khoan.png", screenshot)):
-                step = DOI_UID
-                 
             if (phone.wait_img("close_xem_not_available.png", screenshot)):
                 phone.click_to_img("close_xem_not_available.png", screenshot)
             if (phone.wait_img("setting_btn.png", screenshot)):
                 phone.click_to_img("setting_btn.png", screenshot)
+                step = DOI_UID
         
         elif step == DOI_UID:
             if (phone.wait_img("tai_khoan.png", screenshot)):
@@ -115,6 +113,7 @@ def main():
                 phone.click_to_img("ok_doi_uid.png", screenshot)
             if (phone.wait_img("login.png", screenshot)):
                 step = CHON_UID
+
         elif step == CHON_UID:
             if (phone.wait_img("show_list_uid.png", screenshot)):
                 phone.click_to_img("show_list_uid.png", screenshot)

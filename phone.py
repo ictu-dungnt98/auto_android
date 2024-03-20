@@ -52,7 +52,6 @@ class Phone:
 
         # Threshold for match confidence
         threshold = 0.8
-
         # If a match is found with sufficient confidence
         if max_val >= threshold:
             # Extract the coordinates of the match
@@ -65,11 +64,9 @@ class Phone:
     def find_center_of_img(self,template_path,screenshot):
         # # Load the template image
         template = cv2.imread(template_path, cv2.IMREAD_COLOR)
-
         # Convert images to the correct data type if necessary
         screenshot = cv2.convertScaleAbs(screenshot)
         template = cv2.convertScaleAbs(template)
-
         # Perform template matching
         result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
@@ -130,6 +127,30 @@ class Phone:
             print("click to {} fail".format(img_path))
             time.sleep(1)  # Wait for 1 second before retrying
             return False
+    
+    def click_left_of_img(self, img_path, screenshot):
+        # Load the template image
+        template = cv2.imread(img_path, cv2.IMREAD_COLOR)
+        # Convert images to the correct data type if necessary
+        screenshot = cv2.convertScaleAbs(screenshot)
+        template = cv2.convertScaleAbs(template)
+
+        # Perform template matching
+        result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+
+        # Threshold for match confidence
+        threshold = 0.8
+        if max_val >= threshold:
+            # Calculate the center coordinates
+            top_left = max_loc
+            center_x = top_left[0]
+            center_y = top_left[1]
+            self.click_to_position(center_x, center_y)
+            print("click to {} success".format(img_path))
+            return True
+        else:
+            return None
 
 
     def click_to_position(self, x, y):
