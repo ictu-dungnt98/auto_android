@@ -82,9 +82,11 @@ def main():
                 phone.click_to_img("qua_tang_qc.png", screenshot)
             if(phone.wait_img("xem_available.png", screenshot)):
                 step = XEM_QC
+            if(phone.wait_img("35_35.png", screenshot)):
+                step = LOG_OUT
 
         if step == XEM_QC:
-            if(phone.wait_img("xem_not_available.png", screenshot)):
+            if(phone.wait_img("35_35.png", screenshot)):
                 step = LOG_OUT
             if(phone.wait_img("xem_available.png", screenshot)):
                 phone.click_to_img("xem_available.png", screenshot)

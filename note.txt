@@ -8,3 +8,5 @@
 
 # capture template screen
 adb exec-out screencap -p > screenshot.png
+
+# this tool use ADB Capture for create template image

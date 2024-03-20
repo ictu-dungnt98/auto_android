@@ -83,6 +83,7 @@ class Phone:
         return 0, 0
 
     def wait_img(self, img_path, screenshot):
+        print("wait_img {}".format(img_path))
         match_location = self.find_image(img_path, screenshot)
         if match_location:
             return True
