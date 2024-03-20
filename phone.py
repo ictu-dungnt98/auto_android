@@ -31,9 +31,7 @@ class Phone:
 
     def capture_screen(self):
         # Run adb command to capture a screenshot
-        adb_cmd = "adb exec-out screencap -p"
-        adb_process = subprocess.Popen(adb_cmd, shell=True, stdout=subprocess.PIPE)
-        screenshot_bytes, _ = adb_process.communicate()
+        screenshot_bytes = self.device.screencap()
         # Convert the screenshot bytes to a numpy array
         screenshot_np = np.frombuffer(screenshot_bytes, dtype=np.uint8)
         # Decode the numpy array as an OpenCV image

@@ -10,7 +10,26 @@ XEM_QC = LOGIN + 1
 LOG_OUT = XEM_QC + 1
 DOI_UID = LOG_OUT + 1
 CHON_UID = DOI_UID + 1
-NEXT = CHON_UID + 1
+CLICK_NHAP_USER = CHON_UID + 1
+INSERT_USER = CLICK_NHAP_USER + 1
+CLICK_NHAP_PASSWD = INSERT_USER + 1
+INSERT_PASSWD = CLICK_NHAP_PASSWD + 1
+CLICK_DANG_NHAP = INSERT_PASSWD + 1
+
+def parse_user_password(filename):
+    user_password_pairs = []
+
+    with open(filename, 'r') as file:
+        for line in file:
+            # Split the line into username and password based on the separator "|"
+            parts = line.strip().split("|")
+            if len(parts) == 2:
+                username = parts[0].strip()
+                password = parts[1].strip()
+                user_password_pairs.append((username, password))
+
+    return user_password_pairs
+
 def connect():
     # start adb-server
     cmd = f"adb start-server"
@@ -28,11 +47,14 @@ def connect():
     return device, client
 
 def main():
-    step = LOGIN
+    step = CHON_UID
     package_name = "com.playmini.miniworld"
     activity_name = "org.appplay.lib.AppPlayBaseActivity"
     
     # connect adb
+    in_used = 0
+    user_password_pairs = parse_user_password("account.txt")
+    
     device, client = connect()
     phone = Phone(device)
 
@@ -45,9 +67,13 @@ def main():
     while True:
         screenshot = phone.capture_screen()
 
-        if step == LOGIN:
+        if step == LOGIN:       
             if (phone.wait_img("login.png", screenshot)):
                 phone.click_de_vao_game(screenshot)
+            if (phone.wait_img("close_unused_popup.png", screenshot)):
+                phone.click_to_img("close_unused_popup.png", screenshot)
+            if (phone.wait_img("close_tich_luy_dang_nhap.png", screenshot)):
+                phone.click_to_img("close_tich_luy_dang_nhap.png", screenshot)
             if (phone.wait_img("home.png", screenshot)):
                 phone.click_to_img("nhan_vat.png", screenshot)
             if (phone.wait_img("quang_cao.png", screenshot)):
@@ -91,7 +117,47 @@ def main():
                 step = CHON_UID
         elif step == CHON_UID:
             if (phone.wait_img("show_list_uid.png", screenshot)):
-                phone.click_to_img("show_list_uid.png", screenshot)   
+                phone.click_to_img("show_list_uid.png", screenshot)
+            if (phone.wait_img("add_uid.png", screenshot)):
+                phone.click_to_img("add_uid.png", screenshot)
+            if (phone.wait_img("dang_nhap_tai_khoan.png", screenshot)):
+                phone.click_to_img("dang_nhap_tai_khoan.png", screenshot)
+            if (phone.wait_img("text_input_username.png", screenshot)):
+                step = CLICK_NHAP_USER
+                
+        elif step == CLICK_NHAP_USER:
+            if (phone.wait_img("text_input_username.png", screenshot)):
+                phone.click_to_img("text_input_username.png", screenshot)
+            if (phone.wait_img("insert_text.png", screenshot)):
+                step = INSERT_USER
+                
+        elif step == INSERT_USER:
+            if (phone.wait_img("insert_text.png", screenshot)):
+                user, passwd = user_password_pairs[in_used]
+                device.shell(f"input text '{user}'")
+                if (phone.wait_img("ok_text_input.png", screenshot)):
+                    phone.click_to_img("ok_text_input.png", screenshot)
+                    step = CLICK_NHAP_PASSWD
         
+        elif step == CLICK_NHAP_PASSWD:
+            if (phone.wait_img("text_input_passwd.png", screenshot)):
+                phone.click_to_img("text_input_passwd.png", screenshot)
+            if (phone.wait_img("insert_text.png", screenshot)):
+                step = INSERT_PASSWD
+
+        elif step == INSERT_PASSWD:
+            if (phone.wait_img("insert_text.png", screenshot)):
+                user, passwd = user_password_pairs[in_used]
+                device.shell(f"input text '{passwd}'")
+                if (phone.wait_img("ok_text_input.png", screenshot)):
+                    phone.click_to_img("ok_text_input.png", screenshot)
+                    step = CLICK_DANG_NHAP
+
+        elif step == CLICK_DANG_NHAP:
+            if (phone.wait_img("btn_dang_nhap.png", screenshot)):
+                phone.click_to_img("btn_dang_nhap.png", screenshot)
+            if (phone.wait_img("tiep_tuc_dang_nhap.png", screenshot)):
+                phone.click_to_img("tiep_tuc_dang_nhap.png", screenshot)
+                step = LOGIN
 if __name__ == "__main__":
     main()
