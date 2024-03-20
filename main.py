@@ -3,6 +3,7 @@ import subprocess
 import time
 import numpy as np
 from phone import Phone
+import threading
 
 # list cac buoc
 LOGIN = 1
@@ -161,12 +162,26 @@ def state_machine(device, index):
                 phone.click_to_img("tiep_tuc_dang_nhap.png", screenshot)
                 step = LOGIN
 
+def process_device(device, index):
+    state_machine(device, index)
+
+def process_devices(devices):
+    threads = []
+
+    # Create and start a thread for each device
+    for index, device in enumerate(devices):
+        thread = threading.Thread(target=process_device, args=(device, index))
+        threads.append(thread)
+        thread.start()
+
+    # Wait for all threads to complete
+    for thread in threads:
+        thread.join()
+
 def main():
     devices = connect()
     print("phat hien {} thiet bi".format(len(devices)))
-    
-    for index, device in enumerate(devices):
-        state_machine(device, index)
+    process_devices(devices)
     
 if __name__ == "__main__":
     main()
