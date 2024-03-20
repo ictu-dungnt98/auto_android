@@ -42,20 +42,19 @@ def connect():
     if len(devices) == 0:
         print("No devices connected.")
         exit()
-    
-    device = devices[0]
-    return device, client
 
-def main():
+    return devices
+
+def state_machine(device, index):
     step = CHON_UID
     package_name = "com.playmini.miniworld"
     activity_name = "org.appplay.lib.AppPlayBaseActivity"
     
     # connect adb
     in_used = 0
-    user_password_pairs = parse_user_password("account.txt")
+    file_name = f"account{index}.txt"
+    user_password_pairs = parse_user_password(file_name)
     
-    device, client = connect()
     phone = Phone(device)
 
     # close app
@@ -162,5 +161,12 @@ def main():
                 phone.click_to_img("tiep_tuc_dang_nhap.png", screenshot)
                 step = LOGIN
 
+def main():
+    devices = connect()
+    print("phat hien {} thiet bi".format(len(devices)))
+    
+    for index, device in enumerate(devices):
+        state_machine(device, index)
+    
 if __name__ == "__main__":
     main()
