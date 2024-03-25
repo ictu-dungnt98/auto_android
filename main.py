@@ -83,12 +83,12 @@ def state_machine(device, index):
                 step = XEM_QC
             if(phone.wait_img("j7_img/OK_nhan_qua.png", screenshot)):
                 phone.click_to_img("j7_img/OK_nhan_qua.png", screenshot)
-            # if(phone.wait_img("j7_img/35_35.png", screenshot)):
-            #     step = LOG_OUT
+            if(phone.wait_img("j7_img/35_35.png", screenshot)):
+                step = LOG_OUT
 
         if step == XEM_QC:
-            # if(phone.wait_img("j7_img/35_35.png", screenshot)):
-            #     step = LOG_OUT
+            if(phone.wait_img("j7_img/35_35.png", screenshot)):
+                step = LOG_OUT
             if(phone.wait_img("j7_img/xem_available.png", screenshot)):
                 if (phone.click_to_img("j7_img/xem_available.png", screenshot)):
                     time_start_wait = time.time()
@@ -104,6 +104,8 @@ def state_machine(device, index):
                 time_start_wait = time.time()
         
         elif step == LOG_OUT:
+            if(phone.wait_img("j7_img/OK_nhan_qua.png", screenshot)):
+                phone.click_to_img("j7_img/OK_nhan_qua.png", screenshot)
             if (phone.wait_img("j7_img/close_xem_not_available.png", screenshot)):
                 phone.click_to_img("j7_img/close_xem_not_available.png", screenshot)
             if (phone.wait_img("j7_img/setting_btn.png", screenshot)):
@@ -111,6 +113,8 @@ def state_machine(device, index):
                 step = DOI_UID
 
         elif step == DOI_UID:
+            if(phone.wait_img("j7_img/OK_nhan_qua.png", screenshot)):
+                phone.click_to_img("j7_img/OK_nhan_qua.png", screenshot)
             if (phone.wait_img("j7_img/tai_khoan.png", screenshot)):
                 phone.click_to_img("j7_img/tai_khoan.png", screenshot)   
             if (phone.wait_img("j7_img/doi_uuid.png", screenshot)):
