@@ -4,6 +4,14 @@ import time
 import numpy as np
 from phone import Phone
 import threading
+import xml.etree.ElementTree as ET
+
+import subprocess
+import json
+import xml.etree.ElementTree as ET
+from PIL import Image, ImageDraw
+import os
+
 
 # list cac buoc
 LOGIN = 1
@@ -46,16 +54,113 @@ def connect():
 
     return devices
 
+# Function to get the screen size of the phone
+def get_phone_screen_size():
+    # Run adb shell command to get display metrics
+    adb_cmd = "adb shell wm size"
+    adb_process = subprocess.Popen(adb_cmd, shell=True, stdout=subprocess.PIPE)
+    output = adb_process.stdout.read().decode("utf-8").strip()
+
+    # Extract screen size from output
+    screen_size = output.split("Physical size:")[1].split("\n")[0].strip()
+
+    # Parse screen size as width and height
+    width, height = map(int, screen_size.split("x"))
+
+    return width, height
+
+# Function to dump window layout using adb shell uiautomator dump
+# def dump_window_layout(device):
+#     # remove old file
+#     # try:
+#     #     os.remove("window_dump.xml")
+#     # except:
+#     #     pass
+#     # Run adb shell uiautomator dump command
+#     # Run adb shell uiautomator dump command
+#     adb_cmd = "uiautomator dump /sdcard/window_dump.xml"
+#     subprocess.run(adb_cmd, shell=True)
+#     # Pull the XML file from the device
+#     device.shell("pull /sdcard/window_dump.xml")
+#     # Wait until the file exists
+#     max_attempts = 10
+#     interval = 0.5  # Check every 0.5 seconds
+#     attempts = 0
+    
+#     while not os.path.exists("window_dump.xml"):
+#         time.sleep(interval)
+#         attempts += 1
+#         if attempts >= max_attempts:
+#             print("Timeout: File not found.")
+#             return
+
+#     print("File found: Window layout dump complete.")
+
+def dump_window_layout(device):
+    # remove old file
+    try:
+        os.remove("window_dump.xml")
+    except:
+        pass
+    
+    while True:
+        # Run adb shell uiautomator dump command
+        adb_cmd = "uiautomator dump /sdcard/window_dump.xml"
+        device.shell(adb_cmd)
+        time.sleep(2)
+
+        # Pull the XML file from the device
+        adb_cmd = "pull /sdcard/window_dump.xml"
+        device.shell(adb_cmd)
+        time.sleep(2)
+        
+        # Parse the XML file
+        try:
+            tree = ET.parse("window_dump.xml")
+            root = tree.getroot()
+            return root
+        except:
+            pass
+    return None
+
+# Function to parse the XML file containing window layout information
+def parse_window_layout(device):
+    try:
+        tree = ET.parse("window_dump.xml")
+        root = tree.getroot()
+        # # Extract relevant information from the XML
+        # # Example: find the package name and bounds of the first node
+        # package_name = root.attrib.get("package")
+        # bounds = root.find(".//node").attrib.get("bounds")
+        return root
+    except:
+        pass
+
+# Function to draw rectangles representing screen elements on a canvas image
+def draw_screen_elements(root, image_size):
+    img = Image.new("RGB", image_size, color="white")
+    draw = ImageDraw.Draw(img)
+
+    for node in root.findall(".//node"):
+        bounds = node.attrib.get("bounds")
+        left, top, right, bottom = map(int, bounds.strip("[]").replace("][", ",").split(","))
+        draw.rectangle([left, top, right, bottom], outline="red")
+
+    return img
+
+
 def state_machine(device, index):
-    step = CHON_UID
+    # app package
     package_name = "com.playmini.miniworld"
     activity_name = "org.appplay.lib.AppPlayBaseActivity"
     
-    # connect adb
+    # account
     in_used = 0
+    step = CHON_UID
     file_name = f"account{index}.txt"
     user_password_pairs = parse_user_password(file_name)
     
+    # connect adb
     phone = Phone(device)
 
     # close app
@@ -64,124 +169,29 @@ def state_machine(device, index):
     phone.open_app(package_name, activity_name)
     time.sleep(2)
     
+    # Get the screen size of the phone
+    screen_width, screen_height = get_phone_screen_size()
+    print("Screen Width:", screen_width)
+    print("Screen Height:", screen_height)
+    
     while True:
-        screenshot = phone.capture_screen()
+        # Load XML file containing window layout information
+        xml_file = "window_dump.xml"
+        if (dump_window_layout(device) != None):
+            # Parse and extract information from the dumped layout
+            root = parse_window_layout(device)
 
-        if step == LOGIN:       
-            if (phone.wait_img("login.png", screenshot)):
-                phone.click_de_vao_game(screenshot)
-            if (phone.wait_img("close_unused_popup.png", screenshot)):
-                phone.click_to_img("close_unused_popup.png", screenshot)
-            if (phone.wait_img("close_tich_luy_dang_nhap.png", screenshot)):
-                phone.click_to_img("close_tich_luy_dang_nhap.png", screenshot)
-            if (phone.wait_img("home.png", screenshot)):
-                phone.click_left_of_img("plus_jump_to_qc.png", screenshot)
-            if (phone.wait_img("quang_cao.png", screenshot)):
-                phone.click_to_img("quang_cao.png", screenshot)
-            if (phone.wait_img("qua_tang_qc.png", screenshot)):
-                phone.click_to_img("qua_tang_qc.png", screenshot)
-            if(phone.wait_img("xem_available.png", screenshot)):
-                step = XEM_QC
-            if(phone.wait_img("35_35.png", screenshot)):
-                step = LOG_OUT
+            # Draw screen elements on an image
+            image_size = (screen_width, screen_height)
+            canvas_image = draw_screen_elements(root, image_size)
 
-        if step == XEM_QC:
-            if(phone.wait_img("35_35.png", screenshot)):
-                step = LOG_OUT
-            if(phone.wait_img("xem_available.png", screenshot)):
-                phone.click_to_img("xem_available.png", screenshot)
-            if(phone.wait_img("close_quang_cao.png", screenshot)):
-                phone.click_to_img("close_quang_cao.png", screenshot)
-            if(phone.wait_img("x_quang_cao.png", screenshot)):
-                phone.click_to_img("x_quang_cao.png", screenshot)
-            if(phone.wait_img("x_quang_cao_2.png", screenshot)):
-                phone.click_to_img("x_quang_cao_2.png", screenshot)
-            if(phone.wait_img("OK_nhan_qua.png", screenshot)):
-                phone.click_to_img("OK_nhan_qua.png", screenshot)
-        
-        elif step == LOG_OUT:
-            if (phone.wait_img("close_xem_not_available.png", screenshot)):
-                phone.click_to_img("close_xem_not_available.png", screenshot)
-            if (phone.wait_img("setting_btn.png", screenshot)):
-                phone.click_to_img("setting_btn.png", screenshot)
-                step = DOI_UID
-        
-        elif step == DOI_UID:
-            if (phone.wait_img("tai_khoan.png", screenshot)):
-                phone.click_to_img("tai_khoan.png", screenshot)   
-            if (phone.wait_img("doi_uuid.png", screenshot)):
-                phone.click_to_img("doi_uuid.png", screenshot)
-            if (phone.wait_img("ok_doi_uid.png", screenshot)):
-                phone.click_to_img("ok_doi_uid.png", screenshot)
-            if (phone.wait_img("login.png", screenshot)):
-                step = CHON_UID
-
-        elif step == CHON_UID:
-            if (phone.wait_img("show_list_uid.png", screenshot)):
-                phone.click_to_img("show_list_uid.png", screenshot)
-            if (phone.wait_img("add_uid.png", screenshot)):
-                phone.click_to_img("add_uid.png", screenshot)
-            if (phone.wait_img("dang_nhap_tai_khoan.png", screenshot)):
-                phone.click_to_img("dang_nhap_tai_khoan.png", screenshot)
-            if (phone.wait_img("text_input_username.png", screenshot)):
-                step = CLICK_NHAP_USER
-                
-        elif step == CLICK_NHAP_USER:
-            if (phone.wait_img("text_input_username.png", screenshot)):
-                phone.click_to_img("text_input_username.png", screenshot)
-            if (phone.wait_img("insert_text.png", screenshot)):
-                step = INSERT_USER
-                
-        elif step == INSERT_USER:
-            if (phone.wait_img("insert_text.png", screenshot)):
-                user, passwd = user_password_pairs[in_used]
-                device.shell(f"input text '{user}'")
-                if (phone.wait_img("ok_text_input.png", screenshot)):
-                    phone.click_to_img("ok_text_input.png", screenshot)
-                    step = CLICK_NHAP_PASSWD
-        
-        elif step == CLICK_NHAP_PASSWD:
-            if (phone.wait_img("text_input_passwd.png", screenshot)):
-                phone.click_to_img("text_input_passwd.png", screenshot)
-            if (phone.wait_img("insert_text.png", screenshot)):
-                step = INSERT_PASSWD
-
-        elif step == INSERT_PASSWD:
-            if (phone.wait_img("insert_text.png", screenshot)):
-                user, passwd = user_password_pairs[in_used]
-                device.shell(f"input text '{passwd}'")
-                if (phone.wait_img("ok_text_input.png", screenshot)):
-                    phone.click_to_img("ok_text_input.png", screenshot)
-                    step = CLICK_DANG_NHAP
-                    in_used += 1
-
-        elif step == CLICK_DANG_NHAP:
-            if (phone.wait_img("btn_dang_nhap.png", screenshot)):
-                phone.click_to_img("btn_dang_nhap.png", screenshot)
-            if (phone.wait_img("tiep_tuc_dang_nhap.png", screenshot)):
-                phone.click_to_img("tiep_tuc_dang_nhap.png", screenshot)
-                step = LOGIN
-
-def process_device(device, index):
-    state_machine(device, index)
-
-def process_devices(devices):
-    threads = []
-
-    # Create and start a thread for each device
-    for index, device in enumerate(devices):
-        thread = threading.Thread(target=process_device, args=(device, index))
-        threads.append(thread)
-        thread.start()
-
-    # Wait for all threads to complete
-    for thread in threads:
-        thread.join()
-
+            # Display the canvas image
+            canvas_image.show()
+    
 def main():
     devices = connect()
     print("phat hien {} thiet bi".format(len(devices)))
-    process_devices(devices)
+    state_machine(devices[0], 0)
     
 if __name__ == "__main__":
     main()
