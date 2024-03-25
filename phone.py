@@ -26,8 +26,16 @@ class Phone:
         self.device.shell(command)
 
     def close_app(self,package_name):
-        adb_cmd = f"adb shell am force-stop {package_name}"
-        subprocess.run(adb_cmd, shell=True)
+        # adb_cmd = f"adb shell am force-stop {package_name}"
+        # subprocess.run(adb_cmd, shell=True)
+        command = f"am force-stop {package_name}"
+        self.device.shell(command)
+    
+    def go_to_home_screen(self):
+        # adb_cmd = "adb shell input keyevent KEYCODE_HOME"
+        # subprocess.run(adb_cmd, shell=True)
+        command = f"input keyevent KEYCODE_HOME"
+        self.device.shell(command)
 
     def capture_screen(self):
         # Run adb command to capture a screenshot
@@ -88,26 +96,6 @@ class Phone:
         if match_location:
             return True
         else:
-            return False
-    
-    def click_de_vao_game(self, screenshot):
-        template = cv2.imread("login.png", cv2.IMREAD_COLOR)
-        template_width, template_height = template.shape[1], template.shape[0]
-        
-        match_location = self.find_image("login.png", screenshot)
-        if match_location:
-            print("login.png image found at location:", match_location)
-            # Get screen dimensions
-            # Calculate center coordinates
-            center_x = template_width / 4
-            center_y = template_height / 4
-            self.click_to_position(center_x, center_y)
-            
-            return True
-        else:
-            print("login.png image not found on the screen. Retrying in 1 second...")
-            time.sleep(1)  # Wait for 1 second before retrying
-            
             return False
     
     def click_to_img(self, img_path, screenshot):
