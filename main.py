@@ -11,7 +11,9 @@ XEM_QC = LOGIN + 1
 LOG_OUT = XEM_QC + 1
 DOI_UID = LOG_OUT + 1
 CHON_UID = DOI_UID + 1
-CLICK_NHAP_USER = CHON_UID + 1
+SCROLL_ACCOUNT = CHON_UID + 1
+SELECT_ACCOUNT = SCROLL_ACCOUNT + 1
+CLICK_NHAP_USER = SELECT_ACCOUNT + 1
 INSERT_USER = CLICK_NHAP_USER + 1
 CLICK_NHAP_PASSWD = INSERT_USER + 1
 INSERT_PASSWD = CLICK_NHAP_PASSWD + 1
@@ -69,8 +71,6 @@ def state_machine(device, index):
         screenshot = phone.capture_screen()
 
         if step == LOGIN:       
-            if (phone.wait_img("login", screenshot)):
-                phone.click_to_img("login", screenshot)
             if (phone.wait_img("close_unused_popup", screenshot)):
                 phone.click_to_img("close_unused_popup", screenshot)
             if (phone.wait_img("close_tich_luy_dang_nhap", screenshot)):
@@ -121,12 +121,19 @@ def state_machine(device, index):
                 phone.click_to_img("doi_uuid", screenshot)
             if (phone.wait_img("ok_doi_uid", screenshot)):
                 phone.click_to_img("ok_doi_uid", screenshot)
-            if (phone.wait_img("login", screenshot)):
+            if (phone.wait_img("show_list_uid", screenshot)):
                 step = CHON_UID
 
         elif step == CHON_UID:
             if (phone.wait_img("show_list_uid", screenshot)):
                 phone.click_to_img("show_list_uid", screenshot)
+            if (phone.wait_img("show_list_uid_success", screenshot)):
+                step = SCROLL_ACCOUNT
+        elif step == SCROLL_ACCOUNT:
+            phone.scroll_down(1165,414,1184,153)
+            if (phone.wait_img("add_uid", screenshot)):
+                step = SELECT_ACCOUNT
+        elif step == SELECT_ACCOUNT:
             if (phone.wait_img("add_uid", screenshot)):
                 phone.click_to_img("add_uid", screenshot)
             if (phone.wait_img("dang_nhap_tai_khoan", screenshot)):
@@ -171,7 +178,7 @@ def state_machine(device, index):
                     continue
             if (phone.wait_img("tiep_tuc_dang_nhap", screenshot)):
                 phone.click_to_img("tiep_tuc_dang_nhap", screenshot)
-                step = LOGIN
+                step = LOG_OUT
 
 def process_devices(devices):
     threads = []

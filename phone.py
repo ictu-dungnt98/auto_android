@@ -44,6 +44,7 @@ class Phone:
         self.img_x_quang_cao_2 = cv2.imread("samsung/x_quang_cao_2.png", cv2.IMREAD_COLOR)
         self.img_xem_available = cv2.imread("samsung/xem_available.png", cv2.IMREAD_COLOR)
         self.img_xem_not_available = cv2.imread("samsung/xem_not_available.png", cv2.IMREAD_COLOR)
+        self.img_show_list_uid_success = cv2.imread("samsung/show_list_uid_success.png", cv2.IMREAD_COLOR)
 
     def get_image_by_name(self, img_path):
         print(f"get_image_by_name {img_path}")
