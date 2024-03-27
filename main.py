@@ -41,7 +41,7 @@ def connect():
     # Get list of devices
     devices = client.devices()
     if len(devices) == 0:
-        print("j7_img/No devices connected.")
+        print("No devices connected.")
         exit()
 
     return devices
@@ -69,31 +69,31 @@ def state_machine(device, index):
         screenshot = phone.capture_screen()
 
         if step == LOGIN:       
-            if (phone.wait_img("j7_img/login.png", screenshot)):
-                phone.click_to_img("j7_img/login.png", screenshot)
-            if (phone.wait_img("j7_img/close_unused_popup.png", screenshot)):
-                phone.click_to_img("j7_img/close_unused_popup.png", screenshot)
-            if (phone.wait_img("j7_img/close_tich_luy_dang_nhap.png", screenshot)):
-                phone.click_to_img("j7_img/close_tich_luy_dang_nhap.png", screenshot)
-            if (phone.wait_img("j7_img/plus_jump_to_qc.png", screenshot)):
-                phone.click_left_of_img("j7_img/plus_jump_to_qc.png", screenshot)
-            if (phone.wait_img("j7_img/qua_tang_qc.png", screenshot)):
-                phone.click_to_img("j7_img/qua_tang_qc.png", screenshot)
-            if(phone.wait_img("j7_img/xem_available.png", screenshot)):
+            if (phone.wait_img("login", screenshot)):
+                phone.click_to_img("login", screenshot)
+            if (phone.wait_img("close_unused_popup", screenshot)):
+                phone.click_to_img("close_unused_popup", screenshot)
+            if (phone.wait_img("close_tich_luy_dang_nhap", screenshot)):
+                phone.click_to_img("close_tich_luy_dang_nhap", screenshot)
+            if (phone.wait_img("plus_jump_to_qc", screenshot)):
+                phone.click_left_of_img("plus_jump_to_qc", screenshot)
+            if (phone.wait_img("qua_tang_qc", screenshot)):
+                phone.click_to_img("qua_tang_qc", screenshot)
+            if(phone.wait_img("xem_available", screenshot)):
                 step = XEM_QC
-            if(phone.wait_img("j7_img/OK_nhan_qua.png", screenshot)):
-                phone.click_to_img("j7_img/OK_nhan_qua.png", screenshot)
-            if(phone.wait_img("j7_img/35_35.png", screenshot)):
+            if(phone.wait_img("OK_nhan_qua", screenshot)):
+                phone.click_to_img("OK_nhan_qua", screenshot)
+            if(phone.wait_img("35_35", screenshot)):
                 step = LOG_OUT
 
         if step == XEM_QC:
-            if(phone.wait_img("j7_img/35_35.png", screenshot)):
+            if(phone.wait_img("35_35", screenshot)):
                 step = LOG_OUT
-            if(phone.wait_img("j7_img/xem_available.png", screenshot)):
-                if (phone.click_to_img("j7_img/xem_available.png", screenshot)):
+            if(phone.wait_img("xem_available", screenshot)):
+                if (phone.click_to_img("xem_available", screenshot)):
                     time_start_wait = time.time()
-            if(phone.wait_img("j7_img/OK_nhan_qua.png", screenshot)):
-                if (phone.click_to_img("j7_img/OK_nhan_qua.png", screenshot)):
+            if(phone.wait_img("OK_nhan_qua", screenshot)):
+                if (phone.click_to_img("OK_nhan_qua", screenshot)):
                     continue
                 
             elapsed_time = time.time() - time_start_wait
@@ -104,73 +104,73 @@ def state_machine(device, index):
                 time_start_wait = time.time()
         
         elif step == LOG_OUT:
-            if(phone.wait_img("j7_img/OK_nhan_qua.png", screenshot)):
-                phone.click_to_img("j7_img/OK_nhan_qua.png", screenshot)
-            if (phone.wait_img("j7_img/close_xem_not_available.png", screenshot)):
-                phone.click_to_img("j7_img/close_xem_not_available.png", screenshot)
-            if (phone.wait_img("j7_img/setting_btn.png", screenshot)):
-                phone.click_to_img("j7_img/setting_btn.png", screenshot)
+            if(phone.wait_img("OK_nhan_qua", screenshot)):
+                phone.click_to_img("OK_nhan_qua", screenshot)
+            if (phone.wait_img("close_xem_not_available", screenshot)):
+                phone.click_to_img("close_xem_not_available", screenshot)
+            if (phone.wait_img("setting_btn", screenshot)):
+                phone.click_to_img("setting_btn", screenshot)
                 step = DOI_UID
 
         elif step == DOI_UID:
-            if(phone.wait_img("j7_img/OK_nhan_qua.png", screenshot)):
-                phone.click_to_img("j7_img/OK_nhan_qua.png", screenshot)
-            if (phone.wait_img("j7_img/tai_khoan.png", screenshot)):
-                phone.click_to_img("j7_img/tai_khoan.png", screenshot)   
-            if (phone.wait_img("j7_img/doi_uuid.png", screenshot)):
-                phone.click_to_img("j7_img/doi_uuid.png", screenshot)
-            if (phone.wait_img("j7_img/ok_doi_uid.png", screenshot)):
-                phone.click_to_img("j7_img/ok_doi_uid.png", screenshot)
-            if (phone.wait_img("j7_img/login.png", screenshot)):
+            if(phone.wait_img("OK_nhan_qua", screenshot)):
+                phone.click_to_img("OK_nhan_qua", screenshot)
+            if (phone.wait_img("tai_khoan", screenshot)):
+                phone.click_to_img("tai_khoan", screenshot)   
+            if (phone.wait_img("doi_uuid", screenshot)):
+                phone.click_to_img("doi_uuid", screenshot)
+            if (phone.wait_img("ok_doi_uid", screenshot)):
+                phone.click_to_img("ok_doi_uid", screenshot)
+            if (phone.wait_img("login", screenshot)):
                 step = CHON_UID
 
         elif step == CHON_UID:
-            if (phone.wait_img("j7_img/show_list_uid.png", screenshot)):
-                phone.click_to_img("j7_img/show_list_uid.png", screenshot)
-            if (phone.wait_img("j7_img/add_uid.png", screenshot)):
-                phone.click_to_img("j7_img/add_uid.png", screenshot)
-            if (phone.wait_img("j7_img/dang_nhap_tai_khoan.png", screenshot)):
-                phone.click_to_img("j7_img/dang_nhap_tai_khoan.png", screenshot)
-            if (phone.wait_img("j7_img/text_input_username.png", screenshot)):
+            if (phone.wait_img("show_list_uid", screenshot)):
+                phone.click_to_img("show_list_uid", screenshot)
+            if (phone.wait_img("add_uid", screenshot)):
+                phone.click_to_img("add_uid", screenshot)
+            if (phone.wait_img("dang_nhap_tai_khoan", screenshot)):
+                phone.click_to_img("dang_nhap_tai_khoan", screenshot)
+            if (phone.wait_img("text_input_username", screenshot)):
                 step = CLICK_NHAP_USER
                 
         elif step == CLICK_NHAP_USER:
-            if (phone.wait_img("j7_img/text_input_username.png", screenshot)):
-                phone.click_to_img("j7_img/text_input_username.png", screenshot)
-            if (phone.wait_img("j7_img/insert_text.png", screenshot)):
+            if (phone.wait_img("text_input_username", screenshot)):
+                phone.click_to_img("text_input_username", screenshot)
+            if (phone.wait_img("insert_text", screenshot)):
                 step = INSERT_USER
                 
         elif step == INSERT_USER:
-            if (phone.wait_img("j7_img/insert_text.png", screenshot)):
+            if (phone.wait_img("insert_text", screenshot)):
                 user, passwd = user_password_pairs[in_used]
                 device.shell(f"input text '{user}'")
-                if (phone.wait_img("j7_img/ok_text_input.png", screenshot)):
-                    phone.click_to_img("j7_img/ok_text_input.png", screenshot)
+                if (phone.wait_img("ok_text_input", screenshot)):
+                    phone.click_to_img("ok_text_input", screenshot)
                     step = CLICK_NHAP_PASSWD
         
         elif step == CLICK_NHAP_PASSWD:
-            if (phone.wait_img("j7_img/text_input_passwd.png", screenshot)):
-                phone.click_to_img("j7_img/text_input_passwd.png", screenshot)
-            if (phone.wait_img("j7_img/insert_text.png", screenshot)):
+            if (phone.wait_img("text_input_passwd", screenshot)):
+                phone.click_to_img("text_input_passwd", screenshot)
+            if (phone.wait_img("insert_text", screenshot)):
                 step = INSERT_PASSWD
 
         elif step == INSERT_PASSWD:
-            if (phone.wait_img("j7_img/insert_text.png", screenshot)):
+            if (phone.wait_img("insert_text", screenshot)):
                 user, passwd = user_password_pairs[in_used]
                 device.shell(f"input text '{passwd}'")
-                if (phone.wait_img("j7_img/ok_text_input.png", screenshot)):
-                    phone.click_to_img("j7_img/ok_text_input.png", screenshot)
+                if (phone.wait_img("ok_text_input", screenshot)):
+                    phone.click_to_img("ok_text_input", screenshot)
                     step = CLICK_DANG_NHAP
                     in_used += 1
             else:
                 step = CLICK_NHAP_PASSWD
 
         elif step == CLICK_DANG_NHAP:
-            if (phone.wait_img("j7_img/btn_dang_nhap.png", screenshot)):
-                if (phone.click_to_img("j7_img/btn_dang_nhap.png", screenshot)):
+            if (phone.wait_img("btn_dang_nhap", screenshot)):
+                if (phone.click_to_img("btn_dang_nhap", screenshot)):
                     continue
-            if (phone.wait_img("j7_img/tiep_tuc_dang_nhap.png", screenshot)):
-                phone.click_to_img("j7_img/tiep_tuc_dang_nhap.png", screenshot)
+            if (phone.wait_img("tiep_tuc_dang_nhap", screenshot)):
+                phone.click_to_img("tiep_tuc_dang_nhap", screenshot)
                 step = LOGIN
 
 def process_devices(devices):
@@ -188,7 +188,7 @@ def process_devices(devices):
 
 def main():
     devices = connect()
-    print("j7_img/phat hien {} thiet bi".format(len(devices)))
+    print("phat hien {} thiet bi".format(len(devices)))
     # process_devices(devices)
     state_machine(devices[0], 0)
     
