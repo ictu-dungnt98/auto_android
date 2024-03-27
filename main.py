@@ -12,8 +12,8 @@ LOG_OUT = XEM_QC + 1
 DOI_UID = LOG_OUT + 1
 CHON_UID = DOI_UID + 1
 SCROLL_ACCOUNT = CHON_UID + 1
-SELECT_ACCOUNT = SCROLL_ACCOUNT + 1
-CLICK_NHAP_USER = SELECT_ACCOUNT + 1
+JOIN_GAME = SCROLL_ACCOUNT + 1
+CLICK_NHAP_USER = JOIN_GAME + 1
 INSERT_USER = CLICK_NHAP_USER + 1
 CLICK_NHAP_PASSWD = INSERT_USER + 1
 INSERT_PASSWD = CLICK_NHAP_PASSWD + 1
@@ -138,10 +138,11 @@ def state_machine(device, index):
                 phone.swipe_list_uid("show_list_uid_success", screenshot)
             # wait add uid button
             if (phone.wait_img("add_uid", screenshot)):
-                step = SELECT_ACCOUNT
-        elif step == SELECT_ACCOUNT:
-            phone.select_last_uid("add_uid", screenshot)
-            step = LOGIN
+                phone.select_last_uid("add_uid", screenshot)
+                step = JOIN_GAME
+        elif step == JOIN_GAME:
+                phone.click_to_join_game("show_list_uid", screenshot)
+                step = LOGIN
 
 def process_devices(devices):
     threads = []

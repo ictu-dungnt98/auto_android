@@ -220,3 +220,17 @@ class Phone:
         from_x = center_x
         from_y = center_y - (template_height * 1)
         self.click_to_position(from_x, from_y)
+        
+    def click_to_join_game(self, img_path, screenshot):
+        image = self.get_image_by_name(img_path)
+        # template size
+        template = cv2.convertScaleAbs(image)
+        template_width, template_height = template.shape[1], template.shape[0]
+        # Convert images to the correct data type if necessary
+        screenshot = cv2.convertScaleAbs(screenshot)
+        center_x, center_y = self.find_center_of_img(image, screenshot)
+
+        # from
+        from_x = center_x + (template_width * 3)
+        from_y = center_y + (template_height * 3)
+        self.click_to_position(from_x, from_y)
