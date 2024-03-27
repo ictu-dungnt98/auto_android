@@ -191,17 +191,32 @@ class Phone:
         center_x, center_y = self.find_center_of_img(image, screenshot)
 
         # from
-        from_x = center_x - (template_height * 3)
-        from_y = center_y - (template_width * 3)
+        from_x = center_x - (template_width * 3)
+        from_y = center_y - (template_height * 3)
         print(f"click to src")
         # self.click_to_position(from_x, from_y)
         
         # to
         dst_x = from_x
-        dst_y = from_y - (template_width * 6)
+        dst_y = from_y - (template_height * 6)
         self.scroll_down(from_x, from_y, dst_x, dst_y)
         print(f"click to dst")
         # self.click_to_position(dst_x, dst_y)
         
         # print(f"swipe from {from_x}:{from_y} to {dst_x}:{dst_y}")
         self.scroll_down(from_x, from_y, dst_x, dst_y)
+        
+    def select_last_uid(self, img_path, screenshot):
+        image = self.get_image_by_name(img_path)
+        # template size
+        template = cv2.convertScaleAbs(image)
+        template_width, template_height = template.shape[1], template.shape[0]
+        # Convert images to the correct data type if necessary
+        screenshot = cv2.convertScaleAbs(screenshot)
+        # center poin of img
+        center_x, center_y = self.find_center_of_img(image, screenshot)
+
+        # from
+        from_x = center_x
+        from_y = center_y - (template_height * 1)
+        self.click_to_position(from_x, from_y)

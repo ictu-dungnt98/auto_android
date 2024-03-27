@@ -130,60 +130,18 @@ def state_machine(device, index):
             if (phone.wait_img("show_list_uid_success", screenshot)):
                 step = SCROLL_ACCOUNT
         elif step == SCROLL_ACCOUNT:
-            # phone.scroll_down(1165,414,1184,153)
-            if (phone.wait_img("show_list_uid_success", screenshot)):
-                phone.swipe_list_uid("show_list_uid_success", screenshot)
-                
+            # re-check
             if (phone.wait_img("show_list_uid", screenshot)):
                 phone.click_to_img("show_list_uid", screenshot)
+            # scroll list uid
+            if (phone.wait_img("show_list_uid_success", screenshot)):
+                phone.swipe_list_uid("show_list_uid_success", screenshot)
+            # wait add uid button
             if (phone.wait_img("add_uid", screenshot)):
                 step = SELECT_ACCOUNT
         elif step == SELECT_ACCOUNT:
-            if (phone.wait_img("add_uid", screenshot)):
-                phone.click_to_img("add_uid", screenshot)
-            if (phone.wait_img("dang_nhap_tai_khoan", screenshot)):
-                phone.click_to_img("dang_nhap_tai_khoan", screenshot)
-            if (phone.wait_img("text_input_username", screenshot)):
-                step = CLICK_NHAP_USER
-                
-        elif step == CLICK_NHAP_USER:
-            if (phone.wait_img("text_input_username", screenshot)):
-                phone.click_to_img("text_input_username", screenshot)
-            if (phone.wait_img("insert_text", screenshot)):
-                step = INSERT_USER
-                
-        elif step == INSERT_USER:
-            if (phone.wait_img("insert_text", screenshot)):
-                user, passwd = user_password_pairs[in_used]
-                device.shell(f"input text '{user}'")
-                if (phone.wait_img("ok_text_input", screenshot)):
-                    phone.click_to_img("ok_text_input", screenshot)
-                    step = CLICK_NHAP_PASSWD
-        
-        elif step == CLICK_NHAP_PASSWD:
-            if (phone.wait_img("text_input_passwd", screenshot)):
-                phone.click_to_img("text_input_passwd", screenshot)
-            if (phone.wait_img("insert_text", screenshot)):
-                step = INSERT_PASSWD
-
-        elif step == INSERT_PASSWD:
-            if (phone.wait_img("insert_text", screenshot)):
-                user, passwd = user_password_pairs[in_used]
-                device.shell(f"input text '{passwd}'")
-                if (phone.wait_img("ok_text_input", screenshot)):
-                    phone.click_to_img("ok_text_input", screenshot)
-                    step = CLICK_DANG_NHAP
-                    in_used += 1
-            else:
-                step = CLICK_NHAP_PASSWD
-
-        elif step == CLICK_DANG_NHAP:
-            if (phone.wait_img("btn_dang_nhap", screenshot)):
-                if (phone.click_to_img("btn_dang_nhap", screenshot)):
-                    continue
-            if (phone.wait_img("tiep_tuc_dang_nhap", screenshot)):
-                phone.click_to_img("tiep_tuc_dang_nhap", screenshot)
-                step = LOGIN
+            phone.select_last_uid("add_uid", screenshot)
+            step = LOGIN
 
 def process_devices(devices):
     threads = []
