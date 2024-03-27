@@ -130,7 +130,12 @@ def state_machine(device, index):
             if (phone.wait_img("show_list_uid_success", screenshot)):
                 step = SCROLL_ACCOUNT
         elif step == SCROLL_ACCOUNT:
-            phone.scroll_down(1165,414,1184,153)
+            # phone.scroll_down(1165,414,1184,153)
+            if (phone.wait_img("show_list_uid_success", screenshot)):
+                phone.swipe_list_uid("show_list_uid_success", screenshot)
+                
+            if (phone.wait_img("show_list_uid", screenshot)):
+                phone.click_to_img("show_list_uid", screenshot)
             if (phone.wait_img("add_uid", screenshot)):
                 step = SELECT_ACCOUNT
         elif step == SELECT_ACCOUNT:
@@ -178,7 +183,7 @@ def state_machine(device, index):
                     continue
             if (phone.wait_img("tiep_tuc_dang_nhap", screenshot)):
                 phone.click_to_img("tiep_tuc_dang_nhap", screenshot)
-                step = LOG_OUT
+                step = LOGIN
 
 def process_devices(devices):
     threads = []

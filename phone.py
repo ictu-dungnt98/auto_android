@@ -47,7 +47,7 @@ class Phone:
         self.img_show_list_uid_success = cv2.imread("samsung/show_list_uid_success.png", cv2.IMREAD_COLOR)
 
     def get_image_by_name(self, img_path):
-        print(f"get_image_by_name {img_path}")
+        # print(f"get_image_by_name {img_path}")
         filename = os.path.basename(img_path)
         img_path = f"img_{filename}"
         img = getattr(self, img_path, None)
@@ -124,13 +124,13 @@ class Phone:
             # Calculate the center coordinates
             top_left = max_loc
             template_width, template_height = template.shape[1], template.shape[0]
-            center_x = top_left[0] + template_width // 2
-            center_y = top_left[1] + template_height // 2
+            center_x = top_left[0] + (template_width / 2)
+            center_y = top_left[1] + (template_height / 2)
             return center_x, center_y
         return 0, 0
 
     def wait_img(self, img_path, screenshot):          
-        print("wait_img {}".format(img_path))
+        # print("wait_img {}".format(img_path))
         image = self.get_image_by_name(img_path)
         match_location = self.find_image(image, screenshot)
         if match_location:
@@ -145,7 +145,7 @@ class Phone:
         
         if center_x != 0 and center_y != 0:
             self.click_to_position(center_x, center_y)
-            print("click to {} success".format(img_path))
+            print(f"click to {img_path} success at {center_x}:{center_y}")
             return True
         else:
             print("click to {} fail".format(img_path))
@@ -171,12 +171,37 @@ class Phone:
             center_x = top_left[0]
             center_y = top_left[1]
             self.click_to_position(center_x, center_y)
-            print("click to {} success".format(img_path))
+            print(f"click to {img_path} success at {center_x}:{center_y}")
             return True
         else:
             return None
 
     def click_to_position(self, x, y):
+        print(f"click success at {x}:{y}")
         command = f"input tap {x} {y}"
         self.device.shell(command)
+        
+    def swipe_list_uid(self, img_path, screenshot):
+        image = self.get_image_by_name(img_path)
+        # template size
+        template = cv2.convertScaleAbs(image)
+        template_width, template_height = template.shape[1], template.shape[0]
+        # Convert images to the correct data type if necessary
+        screenshot = cv2.convertScaleAbs(screenshot)
+        center_x, center_y = self.find_center_of_img(image, screenshot)
 
+        # from
+        from_x = center_x - (template_height * 3)
+        from_y = center_y - (template_width * 3)
+        print(f"click to src")
+        # self.click_to_position(from_x, from_y)
+        
+        # to
+        dst_x = from_x
+        dst_y = from_y - (template_width * 6)
+        self.scroll_down(from_x, from_y, dst_x, dst_y)
+        print(f"click to dst")
+        # self.click_to_position(dst_x, dst_y)
+        
+        # print(f"swipe from {from_x}:{from_y} to {dst_x}:{dst_y}")
+        self.scroll_down(from_x, from_y, dst_x, dst_y)
