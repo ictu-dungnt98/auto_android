@@ -12,8 +12,7 @@ adb exec-out screencap -p > screenshot.png
 # this tool use ADB Capture for create template image
 
 
-adb -s ce10160a2024b70b04 shell screencap /sdcard/pic.png
-
-adb -s ce10160a2024b70b04 pull /sdcard/pic.png
+adb -s ce04160412fa6b0904 shell screencap /sdcard/pic.png
+adb -s ce04160412fa6b0904 pull /sdcard/pic.png
 
 000001E07F2FEB40

@@ -36,23 +36,35 @@ def parse_user_password(filename):
     return user_password_pairs
 
 def connect():
+    # start adb-server
+    cmd = f"adb start-server"
+    subprocess.run(cmd, shell=True)
+
+    # Connect to ADB server
+    client = AdbClient(host="127.0.0.1", port=5037)
+    # Get list of devices
+    devices = client.devices()
+    if len(devices) == 0:
+        print("No devices connected.")
+        exit()
+    return devices
     
-    while True:
-        try:
-            # start adb-server
-            cmd = f"adb start-server"
-            subprocess.run(cmd, shell=True, timeout=5)
+    # while True:
+    #     try:
+    #         # start adb-server
+    #         cmd = f"adb start-server"
+    #         subprocess.run(cmd, shell=True, timeout=5)
             
-            # Connect to ADB server
-            client = AdbClient(host="127.0.0.1", port=5037)
-            # Get list of devices
-            devices = client.devices()
-            if len(devices) == 0:
-                print("No devices connected.")
-                exit()
-            return devices
-        except:
-            pass
+    #         # Connect to ADB server
+    #         client = AdbClient(host="127.0.0.1", port=5037)
+    #         # Get list of devices
+    #         devices = client.devices()
+    #         if len(devices) == 0:
+    #             print("No devices connected.")
+    #             exit()
+    #         return devices
+    #     except:
+    #         pass
 
 def state_machine(device, index):    
     step = CHON_UID
@@ -62,9 +74,6 @@ def state_machine(device, index):
     # connect adb
     time_start_wait = 0
     time_to_wait_sec = 10
-    # in_used = 0
-    # file_name = f"account{index}.txt"
-    # user_password_pairs = parse_user_password(file_name)
     
     phone = Phone(device)
 
@@ -78,27 +87,58 @@ def state_machine(device, index):
         screenshot = phone.capture_screen()
 
         if step == CHON_UID:
-            if (phone.wait_img("show_list_uid", screenshot)):
-                if (phone.click_to_img("show_list_uid", screenshot)):
-                    print("continue")
-                    continue
-            if (phone.wait_img("show_list_uid_success", screenshot)):
+            ret = 0
+            imgs = ["show_list_uid", "show_list_uid2", "show_list_uid3",
+                    "show_list_uid4", "show_list_uid5", "show_list_uid6",
+                    "show_list_uid7"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    if (phone.click_to_img(img, screenshot)):
+                        ret = 1
+                        break
+            if ret:
+                print("continue")
+                continue
+            
+            ret = 0
+            imgs = ["show_list_uid_success", "show_list_uid_success2", "show_list_uid_success3",
+                    "show_list_uid_success4", "show_list_uid_success5", "show_list_uid_success6",
+                    "show_list_uid_success7"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    ret = 1
+                    break
+            if ret:
                 step = SCROLL_ACCOUNT
-                
+
         elif step == SCROLL_ACCOUNT:
             # scroll list uid
-            if (phone.wait_img("show_list_uid_success", screenshot)):
-                phone.swipe_list_uid("show_list_uid_success", screenshot)
+            ret = 0
+            imgs = ["show_list_uid_success", "show_list_uid_success2", "show_list_uid_success3",
+                    "show_list_uid_success4", "show_list_uid_success5", "show_list_uid_success6",
+                    "show_list_uid_success7"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    phone.swipe_list_uid(img, screenshot)
+                    ret = 1
+                    break
+            if ret:
                 step = CHOOSE_ACCOUNT
+                
         elif step == CHOOSE_ACCOUNT:
-            # wait add uid button
-            if (phone.wait_img("add_uid", screenshot)):
-                phone.select_last_uid("add_uid", screenshot)
-                step = JOIN_GAME
+            ret = 0
+            imgs = ["add_uid", "add_uid2", "add_uid3",
+                    "add_uid4", "add_uid5", "add_uid6",
+                    "add_uid7"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    phone.select_last_uid(img, screenshot)
+                    step = JOIN_GAME
+                    break
                 
         elif step == JOIN_GAME:
-                phone.click_to_join_game("show_list_uid", screenshot)
-                step = LOGIN
+            phone.click_to_join_game("show_list_uid", screenshot)
+            step = LOGIN
 
         elif step == LOGIN:       
             if (phone.wait_img("close_unused_popup", screenshot)):
@@ -173,7 +213,11 @@ def state_machine(device, index):
             if (phone.wait_img("ok_doi_uid", screenshot)):
                 if (phone.click_to_img("ok_doi_uid", screenshot)):
                     continue
-            if (phone.wait_img("show_list_uid", screenshot)):
+            if (phone.wait_img("show_list_uid", screenshot) or
+                phone.wait_img("show_list_uid2", screenshot) or
+                phone.wait_img("show_list_uid3", screenshot)):
+                step = CHON_UID
+            if (phone.wait_img("show_list_uid2", screenshot)):
                 step = CHON_UID
 
 def process_devices(devices):
@@ -192,8 +236,8 @@ def process_devices(devices):
 def main():
     devices = connect()
     print("phat hien {} thiet bi".format(len(devices)))
-    # process_devices(devices)
-    state_machine(devices[0], 0)
+    process_devices(devices)
+    # state_machine(devices[0], 0)
     
 if __name__ == "__main__":
     main()
