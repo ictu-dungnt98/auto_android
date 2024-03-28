@@ -58,23 +58,19 @@ class Phone:
     def open_app(self, package_name, activity_name):
         # Command to open the app
         command = f"am start -n {package_name}/{activity_name}"
-        self.device.shell(command)
+        self.device.shell(command, timeout=5)
 
     def close_app(self,package_name):
-        # adb_cmd = f"adb shell am force-stop {package_name}"
-        # subprocess.run(adb_cmd, shell=True)
         command = f"am force-stop {package_name}"
-        self.device.shell(command)
+        self.device.shell(command, timeout=5)
     
     def go_to_home_screen(self):
-        # adb_cmd = "adb shell input keyevent KEYCODE_HOME"
-        # subprocess.run(adb_cmd, shell=True)
         command = f"input keyevent KEYCODE_HOME"
-        self.device.shell(command)
+        self.device.shell(command, timeout=5)
 
     def scroll_down(self, start_x, start_y, end_x, end_y):
         command = f"input swipe {start_x} {start_y} {end_x} {end_y}"
-        self.device.shell(command)
+        self.device.shell(command, timeout=2)
 
     def capture_screen(self):
         # Run adb command to capture a screenshot
@@ -129,12 +125,13 @@ class Phone:
         return 0, 0
 
     def wait_img(self, img_path, screenshot):          
-        print("wait_img {}".format(img_path))
         image = self.get_image_by_name(img_path)
         match_location = self.find_image(image, screenshot)
         if match_location:
+            print("wait_img {} success".format(img_path))
             return True
         else:
+            print("wait_img {} fail".format(img_path))
             return False
     
     def click_to_img(self, img_path, screenshot):
@@ -146,6 +143,7 @@ class Phone:
         if center_x != 0 and center_y != 0:
             self.click_to_position(center_x, center_y)
             print(f"click to {img_path} success at {center_x}:{center_y}")
+            time.sleep(2)
             return True
         else:
             print("click to {} fail".format(img_path))
@@ -177,7 +175,7 @@ class Phone:
     def click_to_position(self, x, y):
         print(f"click success at {x}:{y}")
         command = f"input tap {x} {y}"
-        self.device.shell(command)
+        self.device.shell(command, timeout=5)
         
     def swipe_list_uid(self, img_path, screenshot):
         image = self.get_image_by_name(img_path)

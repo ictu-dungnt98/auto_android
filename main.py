@@ -36,19 +36,23 @@ def parse_user_password(filename):
     return user_password_pairs
 
 def connect():
-    # start adb-server
-    cmd = f"adb start-server"
-    subprocess.run(cmd, shell=True)
     
-    # Connect to ADB server
-    client = AdbClient(host="127.0.0.1", port=5037)
-    # Get list of devices
-    devices = client.devices()
-    if len(devices) == 0:
-        print("No devices connected.")
-        exit()
-
-    return devices
+    while True:
+        try:
+            # start adb-server
+            cmd = f"adb start-server"
+            subprocess.run(cmd, shell=True, timeout=5)
+            
+            # Connect to ADB server
+            client = AdbClient(host="127.0.0.1", port=5037)
+            # Get list of devices
+            devices = client.devices()
+            if len(devices) == 0:
+                print("No devices connected.")
+                exit()
+            return devices
+        except:
+            pass
 
 def state_machine(device, index):    
     step = CHON_UID
@@ -57,6 +61,7 @@ def state_machine(device, index):
     
     # connect adb
     time_start_wait = 0
+    time_to_wait_sec = 10
     # in_used = 0
     # file_name = f"account{index}.txt"
     # user_password_pairs = parse_user_password(file_name)
@@ -74,7 +79,9 @@ def state_machine(device, index):
 
         if step == CHON_UID:
             if (phone.wait_img("show_list_uid", screenshot)):
-                phone.click_to_img("show_list_uid", screenshot)
+                if (phone.click_to_img("show_list_uid", screenshot)):
+                    print("continue")
+                    continue
             if (phone.wait_img("show_list_uid_success", screenshot)):
                 step = SCROLL_ACCOUNT
                 
@@ -95,63 +102,77 @@ def state_machine(device, index):
 
         elif step == LOGIN:       
             if (phone.wait_img("close_unused_popup", screenshot)):
-                phone.click_to_img("close_unused_popup", screenshot)
+                if (phone.click_to_img("close_unused_popup", screenshot)):
+                    continue
             if (phone.wait_img("close_tich_luy_dang_nhap", screenshot)):
-                phone.click_to_img("close_tich_luy_dang_nhap", screenshot)
+                if (phone.click_to_img("close_tich_luy_dang_nhap", screenshot)):
+                    continue
             if (phone.wait_img("plus_jump_to_qc", screenshot)):
-                phone.click_left_of_img("plus_jump_to_qc", screenshot)
+                if (phone.click_left_of_img("plus_jump_to_qc", screenshot)):
+                    continue
             if (phone.wait_img("qua_tang_qc", screenshot)):
                 step = QUA_TANG_QC
         
         elif step == QUA_TANG_QC:
             if (phone.wait_img("qua_tang_qc", screenshot)):
                 phone.click_to_img("qua_tang_qc", screenshot)
-            if(phone.wait_img("xem_available", screenshot)):
+            if (phone.wait_img("xem_available", screenshot)):
                 step = XEM_QC
-            if(phone.wait_img("OK_nhan_qua", screenshot)):
-                phone.click_to_img("OK_nhan_qua", screenshot)
-            if(phone.wait_img("35_35", screenshot)):
+                continue
+            if (phone.wait_img("35_35", screenshot)):
                 step = LOG_OUT
+                continue
+            if (phone.wait_img("OK_nhan_qua", screenshot)):
+                phone.click_to_img("OK_nhan_qua", screenshot)
 
         if step == XEM_QC:
             if(phone.wait_img("35_35", screenshot)):
                 step = LOG_OUT
+                continue
             if(phone.wait_img("xem_available", screenshot)):
                 if (phone.click_to_img("xem_available", screenshot)):
                     time_start_wait = time.time()
+                    time_to_wait_sec = 30
             if(phone.wait_img("OK_nhan_qua", screenshot)):
                 if (phone.click_to_img("OK_nhan_qua", screenshot)):
                     continue
             if(phone.wait_img("tiep_tuc_xem", screenshot)):
                 if (phone.click_to_img("tiep_tuc_xem", screenshot)):
                     continue
-                
+
             elapsed_time = time.time() - time_start_wait
-            if (elapsed_time >= 30):
+            if (elapsed_time >= time_to_wait_sec):
                 phone.go_to_home_screen()
                 time.sleep(2)
                 phone.open_app(package_name, activity_name)
                 time.sleep(2)
                 time_start_wait = time.time()
+                time_to_wait_sec = 10
         
         elif step == LOG_OUT:
-            if(phone.wait_img("OK_nhan_qua", screenshot)):
-                phone.click_to_img("OK_nhan_qua", screenshot)
             if (phone.wait_img("close_xem_not_available", screenshot)):
-                phone.click_to_img("close_xem_not_available", screenshot)
+                if (phone.click_to_img("close_xem_not_available", screenshot)):
+                    continue
             if (phone.wait_img("setting_btn", screenshot)):
                 phone.click_to_img("setting_btn", screenshot)
                 step = DOI_UID
+                continue
+            if(phone.wait_img("OK_nhan_qua", screenshot)):
+                phone.click_to_img("OK_nhan_qua", screenshot)
 
         elif step == DOI_UID:
             if(phone.wait_img("OK_nhan_qua", screenshot)):
-                phone.click_to_img("OK_nhan_qua", screenshot)
+                if (phone.click_to_img("OK_nhan_qua", screenshot)):
+                    continue
             if (phone.wait_img("tai_khoan", screenshot)):
-                phone.click_to_img("tai_khoan", screenshot)   
+                if (phone.click_to_img("tai_khoan", screenshot)):
+                    continue
             if (phone.wait_img("doi_uuid", screenshot)):
-                phone.click_to_img("doi_uuid", screenshot)
+                if (phone.click_to_img("doi_uuid", screenshot)):
+                    continue
             if (phone.wait_img("ok_doi_uid", screenshot)):
-                phone.click_to_img("ok_doi_uid", screenshot)
+                if (phone.click_to_img("ok_doi_uid", screenshot)):
+                    continue
             if (phone.wait_img("show_list_uid", screenshot)):
                 step = CHON_UID
 
