@@ -7,12 +7,14 @@ import threading
 
 # list cac buoc
 LOGIN = 1
-XEM_QC = LOGIN + 1
+QUA_TANG_QC = LOGIN + 1
+XEM_QC = QUA_TANG_QC + 1
 LOG_OUT = XEM_QC + 1
 DOI_UID = LOG_OUT + 1
 CHON_UID = DOI_UID + 1
 SCROLL_ACCOUNT = CHON_UID + 1
-JOIN_GAME = SCROLL_ACCOUNT + 1
+CHOOSE_ACCOUNT = SCROLL_ACCOUNT + 1
+JOIN_GAME = CHOOSE_ACCOUNT + 1
 CLICK_NHAP_USER = JOIN_GAME + 1
 INSERT_USER = CLICK_NHAP_USER + 1
 CLICK_NHAP_PASSWD = INSERT_USER + 1
@@ -48,16 +50,16 @@ def connect():
 
     return devices
 
-def state_machine(device, index):
+def state_machine(device, index):    
     step = CHON_UID
     package_name = "com.playmini.miniworld"
     activity_name = "org.appplay.lib.AppPlayBaseActivity"
     
     # connect adb
     time_start_wait = 0
-    in_used = 0
-    file_name = f"account{index}.txt"
-    user_password_pairs = parse_user_password(file_name)
+    # in_used = 0
+    # file_name = f"account{index}.txt"
+    # user_password_pairs = parse_user_password(file_name)
     
     phone = Phone(device)
 
@@ -70,13 +72,38 @@ def state_machine(device, index):
     while True:
         screenshot = phone.capture_screen()
 
-        if step == LOGIN:       
+        if step == CHON_UID:
+            if (phone.wait_img("show_list_uid", screenshot)):
+                phone.click_to_img("show_list_uid", screenshot)
+            if (phone.wait_img("show_list_uid_success", screenshot)):
+                step = SCROLL_ACCOUNT
+                
+        elif step == SCROLL_ACCOUNT:
+            # scroll list uid
+            if (phone.wait_img("show_list_uid_success", screenshot)):
+                phone.swipe_list_uid("show_list_uid_success", screenshot)
+                step = CHOOSE_ACCOUNT
+        elif step == CHOOSE_ACCOUNT:
+            # wait add uid button
+            if (phone.wait_img("add_uid", screenshot)):
+                phone.select_last_uid("add_uid", screenshot)
+                step = JOIN_GAME
+                
+        elif step == JOIN_GAME:
+                phone.click_to_join_game("show_list_uid", screenshot)
+                step = LOGIN
+
+        elif step == LOGIN:       
             if (phone.wait_img("close_unused_popup", screenshot)):
                 phone.click_to_img("close_unused_popup", screenshot)
             if (phone.wait_img("close_tich_luy_dang_nhap", screenshot)):
                 phone.click_to_img("close_tich_luy_dang_nhap", screenshot)
             if (phone.wait_img("plus_jump_to_qc", screenshot)):
                 phone.click_left_of_img("plus_jump_to_qc", screenshot)
+            if (phone.wait_img("qua_tang_qc", screenshot)):
+                step = QUA_TANG_QC
+        
+        elif step == QUA_TANG_QC:
             if (phone.wait_img("qua_tang_qc", screenshot)):
                 phone.click_to_img("qua_tang_qc", screenshot)
             if(phone.wait_img("xem_available", screenshot)):
@@ -95,10 +122,14 @@ def state_machine(device, index):
             if(phone.wait_img("OK_nhan_qua", screenshot)):
                 if (phone.click_to_img("OK_nhan_qua", screenshot)):
                     continue
+            if(phone.wait_img("tiep_tuc_xem", screenshot)):
+                if (phone.click_to_img("tiep_tuc_xem", screenshot)):
+                    continue
                 
             elapsed_time = time.time() - time_start_wait
             if (elapsed_time >= 30):
                 phone.go_to_home_screen()
+                time.sleep(2)
                 phone.open_app(package_name, activity_name)
                 time.sleep(2)
                 time_start_wait = time.time()
@@ -123,26 +154,6 @@ def state_machine(device, index):
                 phone.click_to_img("ok_doi_uid", screenshot)
             if (phone.wait_img("show_list_uid", screenshot)):
                 step = CHON_UID
-
-        elif step == CHON_UID:
-            if (phone.wait_img("show_list_uid", screenshot)):
-                phone.click_to_img("show_list_uid", screenshot)
-            if (phone.wait_img("show_list_uid_success", screenshot)):
-                step = SCROLL_ACCOUNT
-        elif step == SCROLL_ACCOUNT:
-            # re-check
-            if (phone.wait_img("show_list_uid", screenshot)):
-                phone.click_to_img("show_list_uid", screenshot)
-            # scroll list uid
-            if (phone.wait_img("show_list_uid_success", screenshot)):
-                phone.swipe_list_uid("show_list_uid_success", screenshot)
-            # wait add uid button
-            if (phone.wait_img("add_uid", screenshot)):
-                phone.select_last_uid("add_uid", screenshot)
-                step = JOIN_GAME
-        elif step == JOIN_GAME:
-                phone.click_to_join_game("show_list_uid", screenshot)
-                step = LOGIN
 
 def process_devices(devices):
     threads = []
