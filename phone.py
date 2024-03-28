@@ -30,18 +30,44 @@ class Phone:
         
         self.img_btn_dang_nhap = cv2.imread(f"{self.phone_type}/btn_dang_nhap.png", cv2.IMREAD_COLOR)
         self.img_close_quang_cao = cv2.imread(f"{self.phone_type}/close_quang_cao.png", cv2.IMREAD_COLOR)
+        
         self.img_close_tich_luy_dang_nhap = cv2.imread(f"{self.phone_type}/close_tich_luy_dang_nhap.png", cv2.IMREAD_COLOR)
+        self.img_close_tich_luy_dang_nhap2 = cv2.imread(f"{self.phone_type}/close_tich_luy_dang_nhap2.png", cv2.IMREAD_COLOR)
+        self.img_close_tich_luy_dang_nhap3 = cv2.imread(f"{self.phone_type}/close_tich_luy_dang_nhap3.png", cv2.IMREAD_COLOR)
+        self.img_close_tich_luy_dang_nhap4 = cv2.imread(f"{self.phone_type}/close_tich_luy_dang_nhap4.png", cv2.IMREAD_COLOR)
+        self.img_close_tich_luy_dang_nhap5 = cv2.imread(f"{self.phone_type}/close_tich_luy_dang_nhap5.png", cv2.IMREAD_COLOR)
+        
         self.img_close_unused_popup = cv2.imread(f"{self.phone_type}/close_unused_popup.png", cv2.IMREAD_COLOR)
+        self.img_close_unused_popup2 = cv2.imread(f"{self.phone_type}/close_unused_popup2.png", cv2.IMREAD_COLOR)
+        self.img_close_unused_popup3 = cv2.imread(f"{self.phone_type}/close_unused_popup3.png", cv2.IMREAD_COLOR)
+        self.img_close_unused_popup4 = cv2.imread(f"{self.phone_type}/close_unused_popup4.png", cv2.IMREAD_COLOR)
+        self.img_close_unused_popup5 = cv2.imread(f"{self.phone_type}/close_unused_popup5.png", cv2.IMREAD_COLOR)
+        
         self.img_close_xem_not_available = cv2.imread(f"{self.phone_type}/close_xem_not_available.png", cv2.IMREAD_COLOR)
         self.img_dang_nhap_tai_khoan = cv2.imread(f"{self.phone_type}/dang_nhap_tai_khoan.png", cv2.IMREAD_COLOR)
         self.img_doi_uuid = cv2.imread(f"{self.phone_type}/doi_uuid.png", cv2.IMREAD_COLOR)
         self.img_insert_text = cv2.imread(f"{self.phone_type}/insert_text.png", cv2.IMREAD_COLOR)
         self.img_login = cv2.imread(f"{self.phone_type}/login.png", cv2.IMREAD_COLOR)
         self.img_ok_doi_uid = cv2.imread(f"{self.phone_type}/ok_doi_uid.png", cv2.IMREAD_COLOR)
+        
         self.img_OK_nhan_qua = cv2.imread(f"{self.phone_type}/OK_nhan_qua.png", cv2.IMREAD_COLOR)
+        self.img_OK_nhan_qua2 = cv2.imread(f"{self.phone_type}/OK_nhan_qua2.png", cv2.IMREAD_COLOR)
+        self.img_OK_nhan_qua3 = cv2.imread(f"{self.phone_type}/OK_nhan_qua3.png", cv2.IMREAD_COLOR)
+        
         self.img_ok_text_input = cv2.imread(f"{self.phone_type}/ok_text_input.png", cv2.IMREAD_COLOR)
+        
         self.img_plus_jump_to_qc = cv2.imread(f"{self.phone_type}/plus_jump_to_qc.png", cv2.IMREAD_COLOR)
+        self.img_plus_jump_to_qc2 = cv2.imread(f"{self.phone_type}/plus_jump_to_qc2.png", cv2.IMREAD_COLOR)
+        self.img_plus_jump_to_qc3 = cv2.imread(f"{self.phone_type}/plus_jump_to_qc3.png", cv2.IMREAD_COLOR)
+        self.img_plus_jump_to_qc4 = cv2.imread(f"{self.phone_type}/plus_jump_to_qc4.png", cv2.IMREAD_COLOR)
+        self.img_plus_jump_to_qc5 = cv2.imread(f"{self.phone_type}/plus_jump_to_qc5.png", cv2.IMREAD_COLOR)
+        self.img_plus_jump_to_qc6 = cv2.imread(f"{self.phone_type}/plus_jump_to_qc6.png", cv2.IMREAD_COLOR)
+        
         self.img_qua_tang_qc = cv2.imread(f"{self.phone_type}/qua_tang_qc.png", cv2.IMREAD_COLOR)
+        self.img_qua_tang_qc2 = cv2.imread(f"{self.phone_type}/qua_tang_qc2.png", cv2.IMREAD_COLOR)
+        self.img_qua_tang_qc3 = cv2.imread(f"{self.phone_type}/qua_tang_qc3.png", cv2.IMREAD_COLOR)
+        self.img_qua_tang_qc4 = cv2.imread(f"{self.phone_type}/qua_tang_qc4.png", cv2.IMREAD_COLOR)
+        
         self.img_setting_btn = cv2.imread(f"{self.phone_type}/setting_btn.png", cv2.IMREAD_COLOR)
         
         self.img_show_list_uid = cv2.imread(f"{self.phone_type}/show_list_uid.png", cv2.IMREAD_COLOR)
@@ -63,10 +89,23 @@ class Phone:
         self.img_tai_khoan = cv2.imread(f"{self.phone_type}/tai_khoan.png", cv2.IMREAD_COLOR)
         self.img_text_input_username = cv2.imread(f"{self.phone_type}/text_input_username.png", cv2.IMREAD_COLOR)
         self.img_text_input_passwd = cv2.imread(f"{self.phone_type}/text_input_passwd.png", cv2.IMREAD_COLOR)
+        
         self.img_tiep_tuc_dang_nhap = cv2.imread(f"{self.phone_type}/tiep_tuc_dang_nhap.png", cv2.IMREAD_COLOR)
+        
         self.img_tiep_tuc_xem = cv2.imread(f"{self.phone_type}/tiep_tuc_xem.png", cv2.IMREAD_COLOR)
+        self.img_tiep_tuc_xem2 = cv2.imread(f"{self.phone_type}/tiep_tuc_xem2.png", cv2.IMREAD_COLOR)
+        self.img_tiep_tuc_xem3 = cv2.imread(f"{self.phone_type}/tiep_tuc_xem3.png", cv2.IMREAD_COLOR)
+        
         self.img_x_quang_cao_2 = cv2.imread(f"{self.phone_type}/x_quang_cao_2.png", cv2.IMREAD_COLOR)
+        
         self.img_xem_available = cv2.imread(f"{self.phone_type}/xem_available.png", cv2.IMREAD_COLOR)
+        self.img_xem_available2 = cv2.imread(f"{self.phone_type}/xem_available2.png", cv2.IMREAD_COLOR)
+        self.img_xem_available3 = cv2.imread(f"{self.phone_type}/xem_available3.png", cv2.IMREAD_COLOR)
+        self.img_xem_available4 = cv2.imread(f"{self.phone_type}/xem_available4.png", cv2.IMREAD_COLOR)
+        self.img_xem_available5 = cv2.imread(f"{self.phone_type}/xem_available5.png", cv2.IMREAD_COLOR)
+        self.img_xem_available6 = cv2.imread(f"{self.phone_type}/xem_available6.png", cv2.IMREAD_COLOR)
+        self.img_xem_available7 = cv2.imread(f"{self.phone_type}/xem_available7.png", cv2.IMREAD_COLOR)
+        
         self.img_xem_not_available = cv2.imread(f"{self.phone_type}/xem_not_available.png", cv2.IMREAD_COLOR)
 
     def get_image_by_name(self, img_path):
@@ -82,10 +121,12 @@ class Phone:
         # Command to open the app
         command = f"am start -n {package_name}/{activity_name}"
         self.device.shell(command, timeout=5)
+        time.sleep(2)
 
     def close_app(self,package_name):
         command = f"am force-stop {package_name}"
         self.device.shell(command, timeout=5)
+        time.sleep(2)
     
     def go_to_home_screen(self):
         command = f"input keyevent KEYCODE_HOME"

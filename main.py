@@ -79,7 +79,7 @@ def state_machine(device, index):
 
     # close app
     phone.close_app(package_name)
-    time.sleep(1)
+    time.sleep(2)
     phone.open_app(package_name, activity_name)
     time.sleep(2)
     
@@ -140,45 +140,130 @@ def state_machine(device, index):
             phone.click_to_join_game("show_list_uid", screenshot)
             step = LOGIN
 
-        elif step == LOGIN:       
-            if (phone.wait_img("close_unused_popup", screenshot)):
-                if (phone.click_to_img("close_unused_popup", screenshot)):
-                    continue
-            if (phone.wait_img("close_tich_luy_dang_nhap", screenshot)):
-                if (phone.click_to_img("close_tich_luy_dang_nhap", screenshot)):
-                    continue
-            if (phone.wait_img("plus_jump_to_qc", screenshot)):
-                if (phone.click_left_of_img("plus_jump_to_qc", screenshot)):
-                    continue
-            if (phone.wait_img("qua_tang_qc", screenshot)):
+        elif step == LOGIN:
+            # close_unused_popup
+            ret = 0
+            imgs = ["close_unused_popup", "close_unused_popup2", "close_unused_popup3",
+                    "close_unused_popup4", "close_unused_popup5"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    if (phone.click_to_img(img, screenshot)):
+                        ret = 1
+                        break
+            if ret:
+                continue
+            
+            # close_tich_luy_dang_nhap
+            ret = 0
+            imgs = ["close_tich_luy_dang_nhap", "close_tich_luy_dang_nhap2", "close_tich_luy_dang_nhap3",
+                    "close_tich_luy_dang_nhap4", "close_tich_luy_dang_nhap5"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    if (phone.click_to_img(img, screenshot)):
+                        ret = 1
+                        break
+            if ret:
+                continue
+            
+            # plus_jump_to_qc
+            ret = 0
+            imgs = ["plus_jump_to_qc", "plus_jump_to_qc2", "plus_jump_to_qc3",
+                    "plus_jump_to_qc4", "plus_jump_to_qc5", "plus_jump_to_qc6"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    if (phone.click_left_of_img(img, screenshot)):
+                        ret = 1
+                        break
+            if ret:
+                continue
+            
+            # qua_tang_qc
+            ret = 0
+            imgs = ["qua_tang_qc", "qua_tang_qc2", "qua_tang_qc3",
+                    "qua_tang_qc4"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    ret = 1
+                    break
+            if ret:
                 step = QUA_TANG_QC
         
         elif step == QUA_TANG_QC:
-            if (phone.wait_img("qua_tang_qc", screenshot)):
-                phone.click_to_img("qua_tang_qc", screenshot)
-            if (phone.wait_img("xem_available", screenshot)):
+            # qua_tang_qc
+            ret = 0
+            imgs = ["qua_tang_qc", "qua_tang_qc2", "qua_tang_qc3",
+                    "qua_tang_qc4"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    if (phone.click_to_img(img, screenshot)):
+                        ret = 1
+                        break
+            # xem_available
+            ret = 0
+            imgs = ["xem_available", "xem_available2", "xem_available3",
+                    "xem_available4", "xem_available5", "xem_available6",
+                    "xem_available7"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    ret = 1
+                    break
+            if ret:
                 step = XEM_QC
                 continue
+            
             if (phone.wait_img("35_35", screenshot)):
                 step = LOG_OUT
                 continue
-            if (phone.wait_img("OK_nhan_qua", screenshot)):
-                phone.click_to_img("OK_nhan_qua", screenshot)
+            
+            # OK_nhan_qua
+            ret = 0
+            imgs = ["OK_nhan_qua", "OK_nhan_qua2", "OK_nhan_qua3"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    if (phone.click_to_img(img, screenshot)):
+                        ret = 1
+                        break
 
         if step == XEM_QC:
             if(phone.wait_img("35_35", screenshot)):
                 step = LOG_OUT
                 continue
-            if(phone.wait_img("xem_available", screenshot)):
-                if (phone.click_to_img("xem_available", screenshot)):
-                    time_start_wait = time.time()
-                    time_to_wait_sec = 30
-            if(phone.wait_img("OK_nhan_qua", screenshot)):
-                if (phone.click_to_img("OK_nhan_qua", screenshot)):
-                    continue
-            if(phone.wait_img("tiep_tuc_xem", screenshot)):
-                if (phone.click_to_img("tiep_tuc_xem", screenshot)):
-                    continue
+            
+            # xem_available
+            ret = 0
+            imgs = ["xem_available", "xem_available2", "xem_available3",
+                    "xem_available4", "xem_available5", "xem_available6",
+                    "xem_available7"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    if (phone.click_to_img(img, screenshot)):
+                        ret = 1
+                        break
+            if ret:
+                time_start_wait = time.time()
+                time_to_wait_sec = 30
+                    
+            # OK_nhan_qua
+            ret = 0
+            imgs = ["OK_nhan_qua", "OK_nhan_qua2", "OK_nhan_qua3"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    if (phone.click_to_img(img, screenshot)):
+                        ret = 1
+                        break
+            if ret:        
+                continue
+            
+            # tiep_tuc_xem
+            ret = 0
+            imgs = ["tiep_tuc_xem", "tiep_tuc_xem2", "tiep_tuc_xem3"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    if (phone.click_to_img(img, screenshot)):
+                        ret = 1
+                        break
+            if ret:        
+                continue
 
             elapsed_time = time.time() - time_start_wait
             if (elapsed_time >= time_to_wait_sec):
