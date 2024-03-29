@@ -256,22 +256,6 @@ def state_machine(device, index):
             # if ret:        
             #     continue
 
-            # xem_available
-            ret = 0
-            imgs = ["xem_available", "xem_available2", "xem_available3",
-                    "xem_available4", "xem_available5", "xem_available6",
-                    "xem_available7", "xem_available8", "xem_available9",
-                    "xem_available10"]
-            for img in imgs:
-                if (phone.wait_img(img, screenshot)):
-                    if (phone.click_to_img(img, screenshot)):
-                        ret = 1
-                        break
-            if ret:
-                time_start_wait = time.time()
-                time_to_wait_sec = 30
-                continue
-            
             # het luot xem
             ret = 0
             imgs = ["35_35", "35_35_2", "35_35_3", "35_35_4", "35_35_5"]
@@ -282,6 +266,22 @@ def state_machine(device, index):
             if ret:
                 step = LOG_OUT
                 continue
+
+            # xem_available
+            ret = 0
+            imgs = ["xem_available", "xem_available2", "xem_available3",
+                    "xem_available4", "xem_available5", "xem_available6",
+                    "xem_available7", "xem_available8", "xem_available9"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    if (phone.click_to_img(img, screenshot)):
+                        ret = 1
+                        break
+            if ret:
+                time_start_wait = time.time()
+                time_to_wait_sec = 30
+                continue
+            
 
             elapsed_time = time.time() - time_start_wait
             if (elapsed_time >= time_to_wait_sec):
