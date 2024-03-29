@@ -211,9 +211,16 @@ def state_machine(device, index):
                 step = XEM_QC
                 continue
             
-            if (phone.wait_img("35_35", screenshot)):
+            # het luot xem
+            ret = 0
+            imgs = ["35_35", "35_35_2", "35_35_3", "35_35_4", "35_35_5"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    ret = 1
+                    break
+            if ret:
                 step = LOG_OUT
-                continue
+                continue    
             
             # OK_nhan_qua
             ret = 0
@@ -225,9 +232,16 @@ def state_machine(device, index):
                         break
 
         if step == XEM_QC:
-            if(phone.wait_img("35_35", screenshot)):
+            # het luot xem
+            ret = 0
+            imgs = ["35_35", "35_35_2", "35_35_3", "35_35_4", "35_35_5"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    ret = 1
+                    break
+            if ret:
                 step = LOG_OUT
-                continue
+                continue    
             
             # xem_available
             ret = 0
@@ -264,6 +278,19 @@ def state_machine(device, index):
                         break
             if ret:        
                 continue
+            
+            # show_list_uid
+            ret = 0
+            imgs = ["show_list_uid", "show_list_uid2", "show_list_uid3",
+                    "show_list_uid4", "show_list_uid5", "show_list_uid6",
+                    "show_list_uid7"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    ret = 1
+                    break
+            if ret:
+                step = CHON_UID
+                continue
 
             elapsed_time = time.time() - time_start_wait
             if (elapsed_time >= time_to_wait_sec):
@@ -298,12 +325,18 @@ def state_machine(device, index):
             if (phone.wait_img("ok_doi_uid", screenshot)):
                 if (phone.click_to_img("ok_doi_uid", screenshot)):
                     continue
-            if (phone.wait_img("show_list_uid", screenshot) or
-                phone.wait_img("show_list_uid2", screenshot) or
-                phone.wait_img("show_list_uid3", screenshot)):
+            
+            ret = 0
+            imgs = ["show_list_uid", "show_list_uid2", "show_list_uid3",
+                    "show_list_uid4", "show_list_uid5", "show_list_uid6",
+                    "show_list_uid7"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    ret = 1
+                    break
+            if ret:
                 step = CHON_UID
-            if (phone.wait_img("show_list_uid2", screenshot)):
-                step = CHON_UID
+                continue    
 
 def process_devices(devices):
     threads = []

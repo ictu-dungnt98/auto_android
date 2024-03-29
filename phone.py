@@ -21,6 +21,10 @@ class Phone:
         self.phone_type = "j7_img"
         # self.phone_type = "samsung"
         self.img_35_35 = cv2.imread(f"{self.phone_type}/35_35.png", cv2.IMREAD_COLOR)
+        self.img_35_35_2 = cv2.imread(f"{self.phone_type}/35_35_2.png", cv2.IMREAD_COLOR)
+        self.img_35_35_3 = cv2.imread(f"{self.phone_type}/35_35_3.png", cv2.IMREAD_COLOR)
+        self.img_35_35_4 = cv2.imread(f"{self.phone_type}/35_35_4.png", cv2.IMREAD_COLOR)
+        self.img_35_35_5 = cv2.imread(f"{self.phone_type}/35_35_5.png", cv2.IMREAD_COLOR)
         
         self.img_add_uid = cv2.imread(f"{self.phone_type}/add_uid.png", cv2.IMREAD_COLOR)
         self.img_add_uid2 = cv2.imread(f"{self.phone_type}/add_uid2.png", cv2.IMREAD_COLOR)
