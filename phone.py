@@ -268,6 +268,10 @@ class Phone:
         self.scroll_down(from_x, from_y, dst_x, dst_y)
         self.scroll_down(from_x, from_y, dst_x, dst_y)
         self.scroll_down(from_x, from_y, dst_x, dst_y)
+        self.scroll_down(from_x, from_y, dst_x, dst_y)
+        self.scroll_down(from_x, from_y, dst_x, dst_y)
+        self.scroll_down(from_x, from_y, dst_x, dst_y)
+        self.scroll_down(from_x, from_y, dst_x, dst_y)
         
     def select_last_uid(self, img_path, screenshot):
         image = self.get_image_by_name(img_path)

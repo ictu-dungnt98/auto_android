@@ -137,6 +137,19 @@ def state_machine(device, index):
                     break
                 
         elif step == JOIN_GAME:
+            # scroll list uid
+            ret = 0
+            imgs = ["show_list_uid_success", "show_list_uid_success2", "show_list_uid_success3",
+                    "show_list_uid_success4", "show_list_uid_success5", "show_list_uid_success6",
+                    "show_list_uid_success7"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    phone.swipe_list_uid(img, screenshot)
+                    ret = 1
+                    break
+            if ret:
+                step = CHOOSE_ACCOUNT
+                
             phone.click_to_join_game("show_list_uid", screenshot)
             step = LOGIN
 
