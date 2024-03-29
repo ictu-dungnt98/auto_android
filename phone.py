@@ -57,6 +57,10 @@ class Phone:
         self.img_OK_nhan_qua = cv2.imread(f"{self.phone_type}/OK_nhan_qua.png", cv2.IMREAD_COLOR)
         self.img_OK_nhan_qua2 = cv2.imread(f"{self.phone_type}/OK_nhan_qua2.png", cv2.IMREAD_COLOR)
         self.img_OK_nhan_qua3 = cv2.imread(f"{self.phone_type}/OK_nhan_qua3.png", cv2.IMREAD_COLOR)
+        self.img_OK_nhan_qua4 = cv2.imread(f"{self.phone_type}/OK_nhan_qua4.png", cv2.IMREAD_COLOR)
+        self.img_OK_nhan_qua5 = cv2.imread(f"{self.phone_type}/OK_nhan_qua5.png", cv2.IMREAD_COLOR)
+        self.img_OK_nhan_qua6 = cv2.imread(f"{self.phone_type}/OK_nhan_qua6.png", cv2.IMREAD_COLOR)
+        self.img_OK_nhan_qua7 = cv2.imread(f"{self.phone_type}/OK_nhan_qua7.png", cv2.IMREAD_COLOR)
         
         self.img_ok_text_input = cv2.imread(f"{self.phone_type}/ok_text_input.png", cv2.IMREAD_COLOR)
         

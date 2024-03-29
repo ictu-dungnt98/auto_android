@@ -202,15 +202,6 @@ def state_machine(device, index):
                 step = QUA_TANG_QC
         
         elif step == QUA_TANG_QC:
-            # qua_tang_qc
-            ret = 0
-            imgs = ["qua_tang_qc", "qua_tang_qc2", "qua_tang_qc3",
-                    "qua_tang_qc4"]
-            for img in imgs:
-                if (phone.wait_img(img, screenshot)):
-                    if (phone.click_to_img(img, screenshot)):
-                        ret = 1
-                        break
             # xem_available
             ret = 0
             imgs = ["xem_available", "xem_available2", "xem_available3",
@@ -224,6 +215,17 @@ def state_machine(device, index):
                 step = XEM_QC
                 continue
             
+            # OK_nhan_qua
+            ret = 0
+            imgs = ["OK_nhan_qua", "OK_nhan_qua2", "OK_nhan_qua3",
+                    "OK_nhan_qua4", "OK_nhan_qua5", "OK_nhan_qua6",
+                    "OK_nhan_qua7"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    if (phone.click_to_img(img, screenshot)):
+                        ret = 1
+                        break
+                    
             # het luot xem
             ret = 0
             imgs = ["35_35", "35_35_2", "35_35_3", "35_35_4", "35_35_5"]
@@ -233,46 +235,24 @@ def state_machine(device, index):
                     break
             if ret:
                 step = LOG_OUT
-                continue    
-            
-            # OK_nhan_qua
+                continue  
+              
+            # qua_tang_qc
             ret = 0
-            imgs = ["OK_nhan_qua", "OK_nhan_qua2", "OK_nhan_qua3"]
+            imgs = ["qua_tang_qc", "qua_tang_qc2", "qua_tang_qc3",
+                    "qua_tang_qc4"]
             for img in imgs:
                 if (phone.wait_img(img, screenshot)):
                     if (phone.click_to_img(img, screenshot)):
                         ret = 1
                         break
 
-        if step == XEM_QC:
-            # het luot xem
-            ret = 0
-            imgs = ["35_35", "35_35_2", "35_35_3", "35_35_4", "35_35_5"]
-            for img in imgs:
-                if (phone.wait_img(img, screenshot)):
-                    ret = 1
-                    break
-            if ret:
-                step = LOG_OUT
-                continue    
-            
-            # xem_available
-            ret = 0
-            imgs = ["xem_available", "xem_available2", "xem_available3",
-                    "xem_available4", "xem_available5", "xem_available6",
-                    "xem_available7"]
-            for img in imgs:
-                if (phone.wait_img(img, screenshot)):
-                    if (phone.click_to_img(img, screenshot)):
-                        ret = 1
-                        break
-            if ret:
-                time_start_wait = time.time()
-                time_to_wait_sec = 30
-                    
+        if step == XEM_QC:                    
             # OK_nhan_qua
             ret = 0
-            imgs = ["OK_nhan_qua", "OK_nhan_qua2", "OK_nhan_qua3"]
+            imgs = ["OK_nhan_qua", "OK_nhan_qua2", "OK_nhan_qua3",
+                    "OK_nhan_qua4", "OK_nhan_qua5", "OK_nhan_qua6",
+                    "OK_nhan_qua7"]
             for img in imgs:
                 if (phone.wait_img(img, screenshot)):
                     if (phone.click_to_img(img, screenshot)):
@@ -291,6 +271,31 @@ def state_machine(device, index):
                         break
             if ret:        
                 continue
+
+            # xem_available
+            ret = 0
+            imgs = ["xem_available", "xem_available2", "xem_available3",
+                    "xem_available4", "xem_available5", "xem_available6",
+                    "xem_available7"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    if (phone.click_to_img(img, screenshot)):
+                        ret = 1
+                        break
+            if ret:
+                time_start_wait = time.time()
+                time_to_wait_sec = 30
+            
+            # het luot xem
+            ret = 0
+            imgs = ["35_35", "35_35_2", "35_35_3", "35_35_4", "35_35_5"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    ret = 1
+                    break
+            if ret:
+                step = LOG_OUT
+                continue    
             
             # show_list_uid
             ret = 0
@@ -322,13 +327,33 @@ def state_machine(device, index):
                 phone.click_to_img("setting_btn", screenshot)
                 step = DOI_UID
                 continue
-            if(phone.wait_img("OK_nhan_qua", screenshot)):
-                phone.click_to_img("OK_nhan_qua", screenshot)
+            # OK_nhan_qua
+            ret = 0
+            imgs = ["OK_nhan_qua", "OK_nhan_qua2", "OK_nhan_qua3",
+                    "OK_nhan_qua4", "OK_nhan_qua5", "OK_nhan_qua6",
+                    "OK_nhan_qua7"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    if (phone.click_to_img(img, screenshot)):
+                        ret = 1
+                        break
+            if ret:        
+                continue
 
         elif step == DOI_UID:
-            if(phone.wait_img("OK_nhan_qua", screenshot)):
-                if (phone.click_to_img("OK_nhan_qua", screenshot)):
-                    continue
+            # OK_nhan_qua
+            ret = 0
+            imgs = ["OK_nhan_qua", "OK_nhan_qua2", "OK_nhan_qua3",
+                    "OK_nhan_qua4", "OK_nhan_qua5", "OK_nhan_qua6",
+                    "OK_nhan_qua7"]
+            for img in imgs:
+                if (phone.wait_img(img, screenshot)):
+                    if (phone.click_to_img(img, screenshot)):
+                        ret = 1
+                        break
+            if ret:        
+                continue
+            
             if (phone.wait_img("tai_khoan", screenshot)):
                 if (phone.click_to_img("tai_khoan", screenshot)):
                     continue
