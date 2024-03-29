@@ -280,7 +280,11 @@ class Phone:
         center_x, center_y = self.find_center_of_img(template, screenshot)
 
         # from
+        # default image size
+        image = self.get_image_by_name("add_uid")
+        template = cv2.convertScaleAbs(image)
         template_width, template_height = template.shape[1], template.shape[0]
+        
         from_x = center_x
         from_y = center_y - (template_height * 1)
         self.click_to_position(from_x, from_y)
