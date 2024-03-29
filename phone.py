@@ -113,6 +113,9 @@ class Phone:
         self.img_xem_available5 = cv2.imread(f"{self.phone_type}/xem_available5.png", cv2.IMREAD_COLOR)
         self.img_xem_available6 = cv2.imread(f"{self.phone_type}/xem_available6.png", cv2.IMREAD_COLOR)
         self.img_xem_available7 = cv2.imread(f"{self.phone_type}/xem_available7.png", cv2.IMREAD_COLOR)
+        self.img_xem_available8 = cv2.imread(f"{self.phone_type}/xem_available8.png", cv2.IMREAD_COLOR)
+        self.img_xem_available9 = cv2.imread(f"{self.phone_type}/xem_available9.png", cv2.IMREAD_COLOR)
+        self.img_xem_available10 = cv2.imread(f"{self.phone_type}/xem_available10.png", cv2.IMREAD_COLOR)
         
         self.img_xem_not_available = cv2.imread(f"{self.phone_type}/xem_not_available.png", cv2.IMREAD_COLOR)
 
@@ -200,10 +203,10 @@ class Phone:
         image = self.get_image_by_name(img_path)
         match_location = self.find_image(image, screenshot)
         if match_location:
-            print("wait_img {} success".format(img_path))
+            # print("wait_img {} success".format(img_path))
             return True
         else:
-            print("wait_img {} fail".format(img_path))
+            # print("wait_img {} fail".format(img_path))
             return False
     
     def click_to_img(self, img_path, screenshot):
@@ -214,11 +217,11 @@ class Phone:
         
         if center_x != 0 and center_y != 0:
             self.click_to_position(center_x, center_y)
-            print(f"click to {img_path} success at {center_x}:{center_y}")
+            print(f"{self.device.serial} click to {img_path} success at {center_x}:{center_y}")
             time.sleep(2)
             return True
         else:
-            print("click to {} fail".format(img_path))
+            print(f"{self.device.serial} click to {img_path} fail")
             time.sleep(1)  # Wait for 1 second before retrying
             return False
     
@@ -239,13 +242,12 @@ class Phone:
             center_x = top_left[0]
             center_y = top_left[1]
             self.click_to_position(center_x, center_y)
-            print(f"click to {img_path} success at {center_x}:{center_y}")
+            print(f"{self.device.serial} click to {img_path} success at {center_x}:{center_y}")
             return True
         else:
             return None
 
     def click_to_position(self, x, y):
-        print(f"click success at {x}:{y}")
         command = f"input tap {x} {y}"
         self.device.shell(command, timeout=5)
         
@@ -263,7 +265,7 @@ class Phone:
         # to
         dst_x = from_x
         dst_y = from_y - (template_height * 6)
-        print(f"swipe")
+        print(f"{self.device.serial} swipe")
         self.scroll_down(from_x, from_y, dst_x, dst_y)
         self.scroll_down(from_x, from_y, dst_x, dst_y)
         self.scroll_down(from_x, from_y, dst_x, dst_y)
@@ -292,9 +294,10 @@ class Phone:
         from_x = center_x
         from_y = center_y - (template_height * 1)
         self.click_to_position(from_x, from_y)
+        print(f"{self.device.serial} click last uid success at {from_x}:{from_y}")
         
-    def click_to_join_game(self, img_path, screenshot):
-        image = self.get_image_by_name(img_path)
+    def click_to_join_game(self, screenshot):
+        image = self.get_image_by_name("show_list_uid")
         template = cv2.convertScaleAbs(image)
         screenshot = cv2.convertScaleAbs(screenshot)
         center_x, center_y = self.find_center_of_img(template, screenshot)
@@ -304,3 +307,4 @@ class Phone:
         from_x = center_x + (template_width * 3)
         from_y = center_y + (template_height * 3)
         self.click_to_position(from_x, from_y)
+        print(f"{self.device.serial} click_to_join_game success at {from_x}:{from_y}")

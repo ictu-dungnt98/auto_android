@@ -48,23 +48,6 @@ def connect():
         print("No devices connected.")
         exit()
     return devices
-    
-    # while True:
-    #     try:
-    #         # start adb-server
-    #         cmd = f"adb start-server"
-    #         subprocess.run(cmd, shell=True, timeout=5)
-            
-    #         # Connect to ADB server
-    #         client = AdbClient(host="127.0.0.1", port=5037)
-    #         # Get list of devices
-    #         devices = client.devices()
-    #         if len(devices) == 0:
-    #             print("No devices connected.")
-    #             exit()
-    #         return devices
-    #     except:
-    #         pass
 
 def state_machine(device, index):    
     step = CHON_UID
@@ -150,7 +133,7 @@ def state_machine(device, index):
             if ret:
                 step = CHOOSE_ACCOUNT
                 
-            phone.click_to_join_game("show_list_uid", screenshot)
+            phone.click_to_join_game(screenshot)
             step = LOGIN
 
         elif step == LOGIN:
@@ -206,7 +189,8 @@ def state_machine(device, index):
             ret = 0
             imgs = ["xem_available", "xem_available2", "xem_available3",
                     "xem_available4", "xem_available5", "xem_available6",
-                    "xem_available7"]
+                    "xem_available7", "xem_available8", "xem_available9",
+                    "xem_available10"]
             for img in imgs:
                 if (phone.wait_img(img, screenshot)):
                     ret = 1
@@ -261,22 +245,23 @@ def state_machine(device, index):
             if ret:        
                 continue
             
-            # tiep_tuc_xem
-            ret = 0
-            imgs = ["tiep_tuc_xem", "tiep_tuc_xem2", "tiep_tuc_xem3"]
-            for img in imgs:
-                if (phone.wait_img(img, screenshot)):
-                    if (phone.click_to_img(img, screenshot)):
-                        ret = 1
-                        break
-            if ret:        
-                continue
+            # # tiep_tuc_xem
+            # ret = 0
+            # imgs = ["tiep_tuc_xem", "tiep_tuc_xem2", "tiep_tuc_xem3"]
+            # for img in imgs:
+            #     if (phone.wait_img(img, screenshot)):
+            #         if (phone.click_to_img(img, screenshot)):
+            #             ret = 1
+            #             break
+            # if ret:        
+            #     continue
 
             # xem_available
             ret = 0
             imgs = ["xem_available", "xem_available2", "xem_available3",
                     "xem_available4", "xem_available5", "xem_available6",
-                    "xem_available7"]
+                    "xem_available7", "xem_available8", "xem_available9",
+                    "xem_available10"]
             for img in imgs:
                 if (phone.wait_img(img, screenshot)):
                     if (phone.click_to_img(img, screenshot)):
@@ -285,6 +270,7 @@ def state_machine(device, index):
             if ret:
                 time_start_wait = time.time()
                 time_to_wait_sec = 30
+                continue
             
             # het luot xem
             ret = 0
@@ -295,19 +281,6 @@ def state_machine(device, index):
                     break
             if ret:
                 step = LOG_OUT
-                continue    
-            
-            # show_list_uid
-            ret = 0
-            imgs = ["show_list_uid", "show_list_uid2", "show_list_uid3",
-                    "show_list_uid4", "show_list_uid5", "show_list_uid6",
-                    "show_list_uid7"]
-            for img in imgs:
-                if (phone.wait_img(img, screenshot)):
-                    ret = 1
-                    break
-            if ret:
-                step = CHON_UID
                 continue
 
             elapsed_time = time.time() - time_start_wait
